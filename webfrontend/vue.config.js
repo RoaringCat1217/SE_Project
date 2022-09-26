@@ -10,5 +10,18 @@ module.exports = {
     config.plugins.push(Components({
       resolvers:[ElementPlusResolver()],
     }))
+  },
+  devServer: {
+    https: false,
+    hot: "only",
+    proxy: {
+      '/api': {
+        target: 'http://47.93.251.137:3000/',
+        changeOrigin: false,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
   }
 }

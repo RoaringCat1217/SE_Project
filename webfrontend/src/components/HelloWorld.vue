@@ -1,60 +1,67 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="hello-page">
+    <div class="welcome">Hello! Welcome to Our BBS</div>
+    <el-button type="primary" class="ping-button" @click="handlePing"
+      >Ping</el-button
+    >
   </div>
 </template>
 
 <script>
+// import { ping } from '@/api/ping'
+import axios from 'axios'
+
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  data() {},
+  methods: {
+    handlePing() {
+      axios.get('http://192.168.31.107:8080/api').then((res) => {
+        alert(res.data)
+      })
+    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
+<style lang="scss" scoped>
+$bg: #edf7eb;
+$fg: #6c8e67;
+$light_gray: #6c8e67;
+$cursor: #fff;
+
+.hello-page {
+  min-height: 100%;
+  width: 100%;
+  background-color: $bg;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.hello-page .welcome {
+  font-family: fantasy;
+  font-weight: lighter;
+  color: $fg;
+  font-size: 80px;
+  text-align: center;
+  margin: auto;
+  background-color: #ffffff;
+  border-radius: 20px;
+  width: 1200px;
+  position: relative;
+  top: 70px;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.ping-button {
+  font-family: fantasy;
+  font-weight: 100;
+  font-size: 25px;
+  text-align: center;
+  background: $fg;
+  margin: auto;
+  width: 100px;
+  height: 40px;
+  position: relative;
+  top: -120px;
+  border: 0;
 }
 </style>
