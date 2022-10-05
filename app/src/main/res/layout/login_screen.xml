@@ -11,30 +11,166 @@
         android:layout_width="687dp"
         android:layout_height="500dp"
         android:layout_marginStart="-154dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:adjustViewBounds="true"
+        android:contentDescription="weiming_lake"
         android:src="@drawable/weiming_lake"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="weiming_lake" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="480dp"
+        android:text="@string/bbs_string"
         android:textColor="@color/lighttheme"
-        android:textSize="80sp"
-        android:layout_marginTop="550dp"
-        android:layout_marginStart="32dp"
-        android:textStyle="normal"
-        android:text="@string/bbs_string"/>
+        android:textSize="75sp"
+        android:textStyle="normal" />
 
-    <!--sign_in方法名要一致-->
+    <!--<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="620dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户名"
+                android:textColor="@color/lighttheme"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/et_mobile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="请输入用户名"
+                android:inputType="none"
+                android:maxLength="15"
+                android:singleLine="true"
+                android:textColorHint="@color/lighttheme"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="0dp"
+            android:background="@color/lighttheme" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="密码"
+                android:textColor="@color/lighttheme"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:background="@color/lighttheme"
+                android:gravity="center"
+                android:hint="请输入密码"
+                android:inputType="textPassword"
+                android:maxLength="30"
+                android:singleLine="true"
+                android:textColorHint="@color/lighttheme"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/lighttheme" />
+
+    </LinearLayout>-->
+    <TextView
+        android:id="@+id/user_id"
+        android:text="用户名："
+        android:textColor="@color/lighttheme"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="600dp" />
+
+    <TextView
+        android:id="@+id/user_pwd"
+        android:text="密码："
+        android:textColor="@color/lighttheme"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="650dp"/>
+
+    <EditText
+        android:id="@+id/text_userid"
+        android:layout_marginStart="90dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="600dp"
+        android:autofillHints="请输入用户名"
+        android:textColor="@color/darktheme"
+        android:textSize="18sp"
+        android:background="@color/lighttheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="none"
+        tools:ignore="LabelFor" />
+
+    <EditText
+        android:id="@+id/text_userpwd"
+        android:layout_marginStart="90dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="650dp"
+        android:autofillHints="请输入密码"
+        android:textColor="@color/darktheme"
+        android:textSize="18sp"
+        android:background="@color/lighttheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="none"
+        tools:ignore="LabelFor" />
+
     <Button
         android:id="@+id/button"
-        android:layout_width="178dp"
+        android:layout_width="172dp"
         android:layout_height="64dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="140dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="120dp"
         android:backgroundTint="@color/lighttheme"
         android:onClick="sign_in"
         android:text="@string/sign_in"
@@ -42,18 +178,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!--login方法名要一致-->
     <Button
         android:id="@+id/button2"
-        android:layout_width="178dp"
+        android:layout_width="172dp"
         android:layout_height="64dp"
-        android:layout_marginStart="216dp"
-        android:layout_marginBottom="140dp"
+        android:layout_marginStart="219dp"
+        android:layout_marginBottom="120dp"
         android:backgroundTint="@color/lighttheme"
         android:onClick="login"
         android:text="@string/login"
         android:textColor="@color/darktheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
