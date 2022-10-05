@@ -166,20 +166,20 @@
         tools:ignore="LabelFor" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_sign_up"
         android:layout_width="172dp"
         android:layout_height="64dp"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="120dp"
         android:backgroundTint="@color/lighttheme"
-        android:onClick="sign_in"
-        android:text="@string/sign_in"
+        android:onClick="signup"
+        android:text="@string/sign_up"
         android:textColor="@color/darktheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_login"
         android:layout_width="172dp"
         android:layout_height="64dp"
         android:layout_marginStart="219dp"
