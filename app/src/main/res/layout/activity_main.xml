@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btn"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
@@ -81,72 +82,32 @@
 
         <TextView
             android:id="@+id/txt_hits"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:padding="10dp"
+            style="@style/tab_menu_style"
             android:text="@string/hits_string"
-            android:textColor="@drawable/tab_menu_text"
-            android:textSize="16sp"
             app:drawableTopCompat="@drawable/tab_menu_hits" />
 
         <TextView
             android:id="@+id/txt_favorite"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:padding="10dp"
+            style="@style/tab_menu_style"
             android:text="@string/favorite_string"
-            android:textColor="@drawable/tab_menu_text"
-            android:textSize="16sp"
             app:drawableTopCompat="@drawable/tab_menu_favorite" />
 
         <TextView
             android:id="@+id/txt_edit"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:padding="10dp"
+            style="@style/tab_menu_style"
             android:text="@string/edit_string"
-            android:textColor="@drawable/tab_menu_text"
-            android:textSize="16sp"
             app:drawableTopCompat="@drawable/tab_menu_edit" />
 
         <TextView
             android:id="@+id/txt_group"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:padding="10dp"
+            style="@style/tab_menu_style"
             android:text="@string/group_string"
-            android:textColor="@drawable/tab_menu_text"
-            android:textSize="16sp"
             app:drawableTopCompat="@drawable/tab_menu_group" />
 
         <TextView
             android:id="@+id/txt_personal"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:padding="10dp"
+            style="@style/tab_menu_style"
             android:text="@string/personal_string"
-            android:textColor="@drawable/tab_menu_text"
-            android:textSize="16sp"
             app:drawableTopCompat="@drawable/tab_menu_personal" />
 
     </LinearLayout>
