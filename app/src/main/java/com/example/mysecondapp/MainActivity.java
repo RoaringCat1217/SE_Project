@@ -3,6 +3,7 @@ package com.example.mysecondapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.EditText;
@@ -48,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Looper.prepare();
                 Toast.makeText(MainActivity.this, "网络连接出错!", Toast.LENGTH_SHORT)
                         .show();
+                Looper.loop();
             }
 
             @Override
@@ -59,14 +62,16 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject json = new JSONObject(jsonStr);
                         long retCode = json.getLong("code");
+                        Looper.prepare();
                         if (retCode == 1) {
-                            Toast.makeText(MainActivity.this, "登录成功!", Toast.LENGTH_SHORT)
+                            Toast.makeText(MainActivity.this, "登录成功!", Toast.LENGTH_LONG)
                                     .show();
                         }
                         else {
-                            Toast.makeText(MainActivity.this, "登录失败! 账号或密码错误.", Toast.LENGTH_SHORT)
+                            Toast.makeText(MainActivity.this, "登录失败! 账号或密码错误.", Toast.LENGTH_LONG)
                                     .show();
                         }
+                        Looper.loop();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -89,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Looper.prepare();
                 Toast.makeText(MainActivity.this, "网络连接出错!", Toast.LENGTH_SHORT)
                         .show();
+                Looper.loop();
             }
 
             @Override
@@ -100,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject json = new JSONObject(jsonStr);
                         long retCode = json.getLong("code");
+                        Looper.prepare();
                         if (retCode == 1) {
                             Toast.makeText(MainActivity.this, "注册成功!", Toast.LENGTH_SHORT)
                                     .show();
@@ -108,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "注册失败! 用户名已存在.", Toast.LENGTH_SHORT)
                                     .show();
                         }
+                        Looper.loop();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
