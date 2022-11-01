@@ -1,20 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/btn"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="onClick"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/ly_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/darktheme">
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="58dp"
+            android:text="搜索："
+            android:textColor="@color/lighttheme"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="58dp"
+            android:autofillHints="关键词"
+            android:background="@color/lighttheme"
+            android:inputType="none"
+            android:textColor="@color/darktheme"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/back"
+            android:onClick="go_back"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/translucent"
+            android:src="@mipmap/back_icon" />
+
+        <ImageButton
+            android:id="@+id/settings"
+            android:onClick="settings"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="360dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/translucent"
+            android:src="@mipmap/settings_icon" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/ly_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/lighttheme"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_hits"
+            style="@style/tab_menu_style"
+            android:text="@string/hits_string"
+            app:drawableTopCompat="@drawable/tab_menu_hits" />
+
+        <TextView
+            android:id="@+id/txt_favorite"
+            style="@style/tab_menu_style"
+            android:text="@string/favorite_string"
+            app:drawableTopCompat="@drawable/tab_menu_favorite" />
+
+        <TextView
+            android:id="@+id/txt_edit"
+            style="@style/tab_menu_style"
+            android:text="@string/edit_string"
+            app:drawableTopCompat="@drawable/tab_menu_edit" />
+
+        <TextView
+            android:id="@+id/txt_group"
+            style="@style/tab_menu_style"
+            android:text="@string/group_string"
+            app:drawableTopCompat="@drawable/tab_menu_group" />
+
+        <TextView
+            android:id="@+id/txt_personal"
+            style="@style/tab_menu_style"
+            android:text="@string/personal_string"
+            app:drawableTopCompat="@drawable/tab_menu_personal" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_above="@id/ly_tab_bar"/>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ly_top_bar"
+        android:layout_above="@id/div_tab_bar"
+        android:id="@+id/ly_content">
+
+    </FrameLayout>
+
+</RelativeLayout>
