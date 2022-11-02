@@ -1,20 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="10dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvTitle"
+    <LinearLayout
+        android:id="@+id/click"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginBottom="1dp"
-        android:background="@color/lighttheme"
-        android:gravity="center"
-        android:text="测试"
-        android:textColor="@color/darktheme" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/usr_portrait"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"/>
+            <TextView
+                android:id="@+id/usr_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/darktheme"
+                android:layout_marginStart="50dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/post_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/post_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/liking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/liking_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:layout_gravity="end"
+                android:src="@mipmap/thumbs_icon"
+                tools:ignore="RtlSymmetry" />
+            <TextView
+                android:id="@+id/liking_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.*;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         BackendUtils.get(this, "hot", null, this::fetchHotListCallback);
     }
 
+    //不好意思，这里可以稍微改一下嘛qwq，entry里面的东西变了
     private void fetchHotListCallback(JSONObject json) {
         hotListData.clear();
         try {
@@ -49,7 +51,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         rvHotList = findViewById(R.id.rvHotList);
         hotListData = new ArrayList<>();
-        hotListAdapter = new HotListRVAdapter();
+        hotListAdapter = new HotListRVAdapter(this);
+
+        hotListAdapter.setOnItemClickLitener(new HotListRVAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //处理点击事件
+                Toast.makeText(MainActivity.this,"这是条目"+rvHotList.getBaseline(),Toast.LENGTH_LONG).show();
+            }
+        });
         hotListAdapter.setHotList(hotListData);
         rvHotList.setAdapter(hotListAdapter);
         rvHotList.setLayoutManager(new LinearLayoutManager(this));
