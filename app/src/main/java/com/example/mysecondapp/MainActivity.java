@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         BackendUtils.get(this, "hot", null, this::fetchHotListCallback);
     }
 
-    //不好意思，这里可以稍微改一下嘛qwq，entry里面的东西变了
     private void fetchHotListCallback(JSONObject json) {
         hotListData.clear();
         try {

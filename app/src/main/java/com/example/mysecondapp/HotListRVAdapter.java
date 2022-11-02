@@ -2,7 +2,6 @@ package com.example.mysecondapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HotListRVAdapter extends RecyclerView.Adapter<HotListRVAdapter.ViewHolder>{
 
@@ -46,21 +46,19 @@ public class HotListRVAdapter extends RecyclerView.Adapter<HotListRVAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         HotListEntry entry = hotList.get(position);
         //绑定数据
-        holder.usr_portrait.setImageResource(entry.getUsrPortrait());
-        holder.usr_id.setText(entry.getUsrId());
-        holder.post_title.setText(entry.getPostTitle());
-        holder.post_content.setText(entry.getPostContent());
-        holder.liking_number.setText(entry.getLikingNumber());
+        // holder.ivUsrPortrait.setImageResource(entry.getUsrPortrait());
+        holder.tvUsrID.setText(entry.getUsrId());
+        holder.tvTitle.setText(entry.getTitle());
+        holder.tvContent.setText(entry.getContent());
+        holder.tvLikes.setText(String.format(Locale.getDefault(), "%d", entry.getLikes()));
+
 
         //给点赞按钮添加监听
+        /*
         if (onItemClickLitener != null) {
-            holder.liking_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemClickLitener.onItemClick(view, position);
-                }
-            });
+            holder.ivLikeIcon.setOnClickListener(view -> onItemClickLitener.onItemClick(view, position));
         }
+        */
     }
 
     @Override
@@ -73,22 +71,22 @@ public class HotListRVAdapter extends RecyclerView.Adapter<HotListRVAdapter.View
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView usr_portrait;
-        TextView usr_id;
-        TextView post_title;
-        TextView post_content;
-        ImageView liking_icon;
-        TextView liking_number;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivUsrPortrait;
+        TextView tvUsrID;
+        TextView tvTitle;
+        TextView tvContent;
+        ImageView ivLikeIcon;
+        TextView tvLikes;
 
         public ViewHolder(@NonNull View v) {
             super(v);
-            usr_portrait = v.findViewById(R.id.usr_portrait);
-            usr_id = v.findViewById(R.id.usr_id);
-            post_title = v.findViewById(R.id.post_title);
-            post_content = v.findViewById(R.id.post_content);
-            liking_icon = v.findViewById(R.id.liking_icon);
-            liking_number = v.findViewById(R.id.liking_number);
+            ivUsrPortrait = v.findViewById(R.id.ivUsrPortrait);
+            tvUsrID = v.findViewById(R.id.tvUsrID);
+            tvTitle = v.findViewById(R.id.tvTitle);
+            tvContent = v.findViewById(R.id.tvContent);
+            ivLikeIcon = v.findViewById(R.id.ivLikeIcon);
+            tvLikes = v.findViewById(R.id.tvLikes);
         }
     }
 }
