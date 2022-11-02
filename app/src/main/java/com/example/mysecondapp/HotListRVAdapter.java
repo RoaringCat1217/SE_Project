@@ -1,6 +1,7 @@
 package com.example.mysecondapp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,11 +55,11 @@ public class HotListRVAdapter extends RecyclerView.Adapter<HotListRVAdapter.View
 
 
         //给点赞按钮添加监听
-        /*
         if (onItemClickLitener != null) {
-            holder.ivLikeIcon.setOnClickListener(view -> onItemClickLitener.onItemClick(view, position));
+            holder.ivLikeIcon.setOnClickListener(view -> {
+                LoginUtils.checkForLogin((Activity) this.context, () -> {});
+            });
         }
-        */
     }
 
     @Override

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -65,7 +67,16 @@ public class MainActivity extends AppCompatActivity {
         fetchHotList();
     }
 
-
+    @Override
+    protected void onActivityResult(int reqCode, int resCode, Intent data) {
+        super.onActivityResult(reqCode, resCode, data);
+        if (data == null || resCode != Activity.RESULT_OK)
+            return;
+        String loginData = data.getStringExtra("key_login");
+        if (!loginData.equals("from_login"))
+            return;
+        LoginUtils.loginSuccess(reqCode);
+    }
 
     public void go_back(View view) {
     }
