@@ -56,7 +56,7 @@ public class RecycleAdapterDome extends RecyclerView.Adapter<RecycleAdapterDome.
                 public MyViewHolder(View itemView) {//这个view参数就是recyclerview子项的最外层布局
                         super(itemView);
                         //可以通过findViewById方法获取布局中的TextView
-                        textView = (TextView) itemView.findViewById(R.id.text_view);
+                        textView = (TextView) itemView.findViewById(R.id.tvTitle);
                 }
         }
 }
