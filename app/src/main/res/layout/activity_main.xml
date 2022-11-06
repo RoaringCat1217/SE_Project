@@ -65,59 +65,52 @@
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvHotList"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="56dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <LinearLayout
-        android:id="@+id/ly_tab_bar"
+    <RadioGroup
+        android:id="@+id/rg_tab_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
         android:background="@color/lighttheme"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txt_hits"
+        <RadioButton
+            android:id="@+id/rb_hits"
             style="@style/tab_menu_style"
             android:text="@string/hits_string"
             app:drawableTopCompat="@drawable/tab_menu_hits" />
 
-        <TextView
-            android:id="@+id/txt_favorite"
+        <RadioButton
+            android:id="@+id/rb_favorite"
             style="@style/tab_menu_style"
             android:text="@string/favorite_string"
             app:drawableTopCompat="@drawable/tab_menu_favorite" />
 
-        <TextView
-            android:id="@+id/txt_edit"
+        <RadioButton
+            android:id="@+id/rb_edit"
             style="@style/tab_menu_style"
             android:text="@string/edit_string"
             app:drawableTopCompat="@drawable/tab_menu_edit" />
 
-        <TextView
-            android:id="@+id/txt_group"
+        <RadioButton
+            android:id="@+id/rb_group"
             style="@style/tab_menu_style"
             android:text="@string/group_string"
             app:drawableTopCompat="@drawable/tab_menu_group" />
 
-        <TextView
-            android:id="@+id/txt_personal"
+        <RadioButton
+            android:id="@+id/rb_personal"
             style="@style/tab_menu_style"
             android:text="@string/personal_string"
             app:drawableTopCompat="@drawable/tab_menu_personal" />
 
-    </LinearLayout>
+    </RadioGroup>
 
     <View
         android:id="@+id/div_tab_bar"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/white"
-        android:layout_above="@id/ly_tab_bar"/>
+        android:layout_above="@id/rg_tab_bar"/>
 
 
     <FrameLayout
