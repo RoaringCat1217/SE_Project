@@ -1,6 +1,6 @@
 package com.example.mysecondapp;
 
-public class HotListEntry implements Comparable<HotListEntry>{
+public class EntryPost implements Comparable<EntryPost>{
     private String group;
     private int hotIndex;
     private int rank;
@@ -10,16 +10,16 @@ public class HotListEntry implements Comparable<HotListEntry>{
     private String content = "test";
     private int likes = -1;
 
-    public HotListEntry(String group, String title, int hotIndex, int rank) {
+    public EntryPost(String group, String title, int hotIndex, int rank) {
         this.group = group;
         this.title = title;
         this.hotIndex = hotIndex;
         this.rank = rank;
     }
 
-    public HotListEntry(String group, int hotIndex, int rank,
-                        int usrPortrait, String usrID, String title, String content,
-                        int likes) {
+    public EntryPost(String group, int hotIndex, int rank,
+                     int usrPortrait, String usrID, String title, String content,
+                     int likes) {
         this.group = group;
         this.hotIndex = hotIndex;
         this.rank = rank;
@@ -31,8 +31,8 @@ public class HotListEntry implements Comparable<HotListEntry>{
     }
 
     @Override
-    public int compareTo(HotListEntry hotListEntry) {
-        return this.rank - hotListEntry.rank;
+    public int compareTo(EntryPost entryPost) {
+        return this.rank - entryPost.rank;
     }
 
     public int getUsrPortrait() {

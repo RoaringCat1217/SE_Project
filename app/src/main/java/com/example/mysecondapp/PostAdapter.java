@@ -15,36 +15,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class HotListRVAdapter extends RecyclerView.Adapter<HotListRVAdapter.ViewHolder>{
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
-    private List<HotListEntry> hotList = new ArrayList<>();
+    private List<EntryPost> hotList = new ArrayList<>();
     Context context;
-    OnItemClickLitener onItemClickLitener;
+    OnItemClickListener onItemClickListener;
 
-    public HotListRVAdapter(Context context) {
+    public PostAdapter(Context context) {
         this.context = context;
     }
 
-    public interface OnItemClickLitener{
+    public interface OnItemClickListener{
         void onItemClick(View view, int position);
     }
 
-    public void setOnItemClickLitener(OnItemClickLitener onItemClickLitener){
-        this.onItemClickLitener = onItemClickLitener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dome, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dome_item, parent, false);
+        return new ViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        HotListEntry entry = hotList.get(position);
+        EntryPost entry = hotList.get(position);
         //绑定数据
         // holder.ivUsrPortrait.setImageResource(entry.getUsrPortrait());
         holder.tvUsrID.setText(entry.getUsrId());
@@ -52,13 +50,10 @@ public class HotListRVAdapter extends RecyclerView.Adapter<HotListRVAdapter.View
         holder.tvContent.setText(entry.getContent());
         holder.tvLikes.setText(String.format(Locale.getDefault(), "%d", entry.getLikes()));
 
-
         //给点赞按钮添加监听
-        /*
-        if (onItemClickLitener != null) {
-            holder.ivLikeIcon.setOnClickListener(view -> onItemClickLitener.onItemClick(view, position));
+        if (onItemClickListener != null) {
+            holder.ivLikeIcon.setOnClickListener(view -> onItemClickListener.onItemClick(view, position));
         }
-        */
     }
 
     @Override
@@ -66,7 +61,7 @@ public class HotListRVAdapter extends RecyclerView.Adapter<HotListRVAdapter.View
         return hotList.size();
     }
 
-    public void setHotList(List<HotListEntry> hotList) {
+    public void setHotList(List<EntryPost> hotList) {
         this.hotList = hotList;
         notifyDataSetChanged();
     }
