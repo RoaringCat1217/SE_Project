@@ -60,8 +60,9 @@
                 android:id="@+id/ivLikeIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
                 android:layout_gravity="end"
+                android:background="@color/translucent"
+                android:paddingStart="5dp"
                 android:src="@mipmap/thumbs_icon"
                 tools:ignore="RtlSymmetry" />
             <TextView

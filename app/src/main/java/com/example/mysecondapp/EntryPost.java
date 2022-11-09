@@ -8,13 +8,14 @@ public class EntryPost implements Comparable<EntryPost>{
     private String usrID = "test";
     private String title;
     private String content = "test";
-    private int likes = 0;
+    private int likes;
 
-    public EntryPost(String group, String title, int hotIndex, int rank) {
+    public EntryPost(String group, String title, int hotIndex, int rank, int likes) {
         this.group = group;
         this.title = title;
         this.hotIndex = hotIndex;
         this.rank = rank;
+        this.likes = likes;
     }
 
     public EntryPost(String group, int hotIndex, int rank,
