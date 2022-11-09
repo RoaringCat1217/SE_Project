@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +20,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     private List<EntryPost> hotList = new ArrayList<>();
     Context context;
-    OnItemClickListener onItemClickListener;
 
     public PostAdapter(Context context) {
         this.context = context;
@@ -27,10 +27,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     public interface OnItemClickListener{
         void onItemClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
-        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -43,17 +39,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         EntryPost entry = hotList.get(position);
-        //绑定数据
+        // 绑定数据
         // holder.ivUsrPortrait.setImageResource(entry.getUsrPortrait());
         holder.tvUsrID.setText(entry.getUsrId());
         holder.tvTitle.setText(entry.getTitle());
         holder.tvContent.setText(entry.getContent());
         holder.tvLikes.setText(String.format(Locale.getDefault(), "%d", entry.getLikes()));
-
-        //给点赞按钮添加监听
-        if (onItemClickListener != null) {
-            holder.ivLikeIcon.setOnClickListener(view -> onItemClickListener.onItemClick(view, position));
-        }
+        holder.setPostToken(position);
+        // 给浏览帖子绑定监听
+        holder.itemView.setOnClickListener(view -> Toast.makeText(context, "这是帖子" + holder.postToken + "的浏览", Toast.LENGTH_SHORT).show());
+        // 给点赞按钮添加监听
+        holder.ivLikeIcon.setOnClickListener(view -> LoginUtils.checkLogin(context, ()->Toast.makeText(context, "这是帖子" + holder.postToken + "的浏览", Toast.LENGTH_SHORT).show()));
     }
 
     @Override
@@ -73,6 +69,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         TextView tvContent;
         ImageView ivLikeIcon;
         TextView tvLikes;
+        private int postToken;
 
         public ViewHolder(@NonNull View v) {
             super(v);
@@ -82,6 +79,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             tvContent = v.findViewById(R.id.tvContent);
             ivLikeIcon = v.findViewById(R.id.ivLikeIcon);
             tvLikes = v.findViewById(R.id.tvLikes);
+        }
+
+        public void setPostToken(int postToken) {
+            this.postToken = postToken;
         }
     }
 }

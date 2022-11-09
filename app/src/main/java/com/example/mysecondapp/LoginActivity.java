@@ -18,7 +18,6 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etUserID, etUserPwd;
-    public static final String KEY_LOGIN = "key_login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +32,8 @@ public class LoginActivity extends AppCompatActivity {
         String id = etUserID.getText().toString().trim();
         String pwd = etUserPwd.getText().toString().trim();
         Map<String, String> query = new HashMap<>();
-        query.put("id", id);
-        query.put("pwd", pwd);
+        query.put("username", id);
+        query.put("password", pwd);
         BackendUtils.get(this, "login", query, this::loginCallback);
     }
 
@@ -76,9 +75,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginSuccess() {
-        Intent intent = new Intent();
-        intent.putExtra(KEY_LOGIN, "from_login");
-        setResult(RESULT_OK, intent);
+        LoginUtils.login = true;
         finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (LoginUtils.callback != null)
+            LoginUtils.callback.run();
     }
 }

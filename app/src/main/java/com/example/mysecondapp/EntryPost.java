@@ -8,7 +8,7 @@ public class EntryPost implements Comparable<EntryPost>{
     private String usrID = "test";
     private String title;
     private String content = "test";
-    private int likes = -1;
+    private int likes = 0;
 
     public EntryPost(String group, String title, int hotIndex, int rank) {
         this.group = group;
