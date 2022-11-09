@@ -39,14 +39,6 @@ public class FavoriteFragment extends Fragment {
         postData = new ArrayList<>();
         postAdapter.setHotList(postData);
         fetchFavoriteList();
-
-        postAdapter.setOnItemClickListener(new PostAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                //处理点击事件
-                Toast.makeText(getContext(), "这是条目" + rv.getBaseline(), Toast.LENGTH_LONG).show();
-            }
-        });
         return view;
     }
 

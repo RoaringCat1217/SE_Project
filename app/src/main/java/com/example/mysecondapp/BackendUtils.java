@@ -43,13 +43,14 @@ public class BackendUtils {
                     Looper.prepare();
                     Toast.makeText(activity, "服务器端出错!", Toast.LENGTH_SHORT).show();
                     Looper.loop();
-                }
-                String jsonStr = response.body().string();
-                try {
-                    JSONObject json = new JSONObject(jsonStr);
-                    activity.runOnUiThread(()->{callback.run(json);});
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } else {
+                    String jsonStr = response.body().string();
+                    try {
+                        JSONObject json = new JSONObject(jsonStr);
+                        activity.runOnUiThread(()->{callback.run(json);});
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
