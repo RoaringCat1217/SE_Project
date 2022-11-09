@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">My Second App</string>
-    <string name="sign_up">SIGN UP</string>
-    <string name="login">LOGIN</string>
+    <string name="app_name">有名BBS</string>
+    <string name="sign_up">注册</string>
+    <string name="login">登录</string>
     <string name="bbs_string">有名BBS</string>
 
     <string name="hits_string">热榜</string>
