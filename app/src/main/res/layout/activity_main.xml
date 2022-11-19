@@ -46,7 +46,7 @@
             android:background="@color/translucent"
             android:onClick="go_back"
             android:src="@mipmap/back_icon"
-            android:tint="@color/white" />
+            app:tint="@color/white" />
 
         <ImageButton
             android:id="@+id/settings"
@@ -59,7 +59,7 @@
             android:background="@color/translucent"
             android:onClick="settings"
             android:src="@mipmap/settings_icon"
-            android:tint="@color/white" />
+            app:tint="@color/white" />
 
         <View
             android:layout_width="match_parent"

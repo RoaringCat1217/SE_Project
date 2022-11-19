@@ -6,8 +6,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Instrumentation;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -38,6 +44,25 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         //获取第一个单选按钮，并设置其为选中状态
         rbMain = (RadioButton) findViewById(R.id.rb_hits);
         rbMain.setChecked(true);
+
+        // 回退（不知道能不能成功运行）
+        ImageButton backButton = findViewById(R.id.back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread() {
+                    public void run() {
+                        try {
+                            Instrumentation inst = new Instrumentation();
+                            inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+                        } catch (Exception e) {
+                            Log.e("Exception when sendKeyDownUpSync",
+                                    e.toString());
+                        }
+                    }
+                }.start();
+            }
+        });
     }
 
     @Override
