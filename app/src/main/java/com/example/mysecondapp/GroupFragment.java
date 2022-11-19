@@ -2,12 +2,12 @@ package com.example.mysecondapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class GroupFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -42,11 +41,27 @@ public class GroupFragment extends Fragment {
         GroupAdapter groupAdapter = new GroupAdapter(groupList);
         recyclerView.setAdapter(groupAdapter);
 
+        // 设置监听事件：跳转到板块对应的帖子列表，在GroupActivity里面
+
+//        groupAdapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                // 跳到对应板块的帖子列表：GroupActivity
+//                Toast.makeText(getContext(), "这是条目" + recyclerView.getBaseline(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+
         groupAdapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                //处理点击事件
-                Toast.makeText(getContext(), "这是条目" + recyclerView.getBaseline(), Toast.LENGTH_LONG).show();
+                Bundle bundle = new Bundle();
+                try {
+                    Intent intent = new Intent(view.getContext(), GroupListFragment.class);
+                    intent.putExtras(bundle);
+                    view.getContext().startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -73,7 +88,7 @@ public class GroupFragment extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dome_group,viewGroup,false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_group,viewGroup,false);
             return new ViewHolder(view);
         }
 

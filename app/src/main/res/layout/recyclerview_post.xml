@@ -51,27 +51,15 @@
                 android:textSize="18sp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/liking"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/ivLikeIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="@color/translucent"
-                android:paddingStart="5dp"
-                android:src="@mipmap/thumbs_icon"
-                tools:ignore="RtlSymmetry" />
-            <TextView
-                android:id="@+id/tvLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:textSize="18sp"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvTag"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_tag"
+            android:text="鹊桥"
+            android:textColor="@color/lighttheme"
+            android:textSize="20sp"/>
 
     </LinearLayout>
 

@@ -37,7 +37,7 @@ public class FavoriteFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         postData = new ArrayList<>();
-        postAdapter.setHotList(postData);
+        postAdapter.setPostList(postData);
         fetchFavoriteList();
         return view;
     }
@@ -66,6 +66,6 @@ public class FavoriteFragment extends Fragment {
             e.printStackTrace();
         }
         Collections.sort(postData);
-        postAdapter.setHotList(postData);
+        postAdapter.setPostList(postData);
     }
 }

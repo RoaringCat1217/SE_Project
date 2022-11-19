@@ -35,7 +35,7 @@ public class HitsFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         hotListData = new ArrayList<>();
-        hotListAdapter.setHotList(hotListData);
+        hotListAdapter.setPostList(hotListData);
         fetchHotList();
 
         return view;
@@ -63,7 +63,7 @@ public class HitsFragment extends Fragment {
             e.printStackTrace();
         }
         Collections.sort(hotListData);
-        hotListAdapter.setHotList(hotListData);
+        hotListAdapter.setPostList(hotListData);
     }
 
 }

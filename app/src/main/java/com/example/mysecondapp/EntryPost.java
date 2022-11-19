@@ -8,19 +8,19 @@ public class EntryPost implements Comparable<EntryPost>{
     private String usrID = "test";
     private String title;
     private String content = "test";
-    private int likes;
+    private int groupId;
 
-    public EntryPost(String group, String title, int hotIndex, int rank, int likes) {
+    public EntryPost(String group, String title, int hotIndex, int rank, int groupId) {
         this.group = group;
         this.title = title;
         this.hotIndex = hotIndex;
         this.rank = rank;
-        this.likes = likes;
+        this.groupId = groupId;
     }
 
     public EntryPost(String group, int hotIndex, int rank,
                      int usrPortrait, String usrID, String title, String content,
-                     int likes) {
+                     int groupId) {
         this.group = group;
         this.hotIndex = hotIndex;
         this.rank = rank;
@@ -28,7 +28,7 @@ public class EntryPost implements Comparable<EntryPost>{
         this.usrID = usrID;
         this.title = title;
         this.content = content;
-        this.likes = likes;
+        this.groupId = groupId;
     }
 
     @Override
@@ -52,7 +52,8 @@ public class EntryPost implements Comparable<EntryPost>{
         return content;
     }
 
-    public int getLikes() {
-        return likes;
+    public String getTag() {
+        // groupId转换成tag
+        return "";
     }
 }
