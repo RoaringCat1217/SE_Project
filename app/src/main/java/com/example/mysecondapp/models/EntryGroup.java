@@ -1,4 +1,4 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.models;
 
 public class EntryGroup {
     private String name;

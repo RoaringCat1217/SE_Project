@@ -1,4 +1,4 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,18 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mysecondapp.models.EntryPost;
+import com.example.mysecondapp.LoginUtils;
+import com.example.mysecondapp.R;
+import com.example.mysecondapp.activities.PostDisplayActivity;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     private List<EntryPost> postList = new ArrayList<>();
+    public static final String POST_ID = "POST_ID";
     Context context;
 
     public PostAdapter(Context context) {
@@ -41,27 +45,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         EntryPost entry = postList.get(position);
+        // TODO: 用URL请求头像
         // holder.ivUsrPortrait.setImageResource(entry.getUsrPortrait());
-        holder.tvUsrID.setText(entry.getUsrId());
+        holder.tvUsrID.setText(Integer.valueOf(entry.getPostID()).toString());
         holder.tvTitle.setText(entry.getTitle());
         holder.tvContent.setText(entry.getContent());
         holder.tvTag.setText(entry.getTag()); // 去掉xml里我写的“鹊桥”
-        holder.setPostToken(position);
 
         // 给浏览帖子绑定监听
         // holder.itemView.setOnClickListener(view -> Toast.makeText(context, "这是帖子" + holder.postToken + "的浏览", Toast.LENGTH_SHORT).show());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.itemView.setOnClickListener(view -> {
+            LoginUtils.checkLogin(context, ()->{
                 Bundle bundle = new Bundle();
+                bundle.putInt(POST_ID, entry.getPostID());
                 try {
-                    Intent intent = new Intent(view.getContext(), PostDisplay.class);
+                    Intent intent = new Intent(view.getContext(), PostDisplayActivity.class);
                     intent.putExtras(bundle);
                     view.getContext().startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+            });
         });
     }
 
@@ -81,7 +85,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         TextView tvTitle;
         TextView tvContent;
         TextView tvTag; // 去掉点赞按钮以后新加的
-        private int postToken;
 
         public ViewHolder(@NonNull View v) {
             super(v);
@@ -90,10 +93,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             tvTitle = v.findViewById(R.id.tvTitle);
             tvContent = v.findViewById(R.id.tvContent);
             tvTag = v.findViewById(R.id.tvTag);
-        }
-
-        public void setPostToken(int postToken) {
-            this.postToken = postToken;
         }
     }
 }

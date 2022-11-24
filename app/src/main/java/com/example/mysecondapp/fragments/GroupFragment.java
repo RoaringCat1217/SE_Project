@@ -1,4 +1,4 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,6 +14,9 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mysecondapp.models.EntryGroup;
+import com.example.mysecondapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

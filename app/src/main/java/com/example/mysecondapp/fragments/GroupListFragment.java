@@ -1,4 +1,4 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,10 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mysecondapp.models.EntryPost;
+import com.example.mysecondapp.adapters.PostAdapter;
+import com.example.mysecondapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

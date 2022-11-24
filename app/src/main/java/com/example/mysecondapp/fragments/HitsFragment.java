@@ -1,16 +1,19 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.models.EntryPost;
+import com.example.mysecondapp.adapters.PostAdapter;
+import com.example.mysecondapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,11 +23,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// 这个和HitsFragment一模一样
-public class FavoriteFragment extends Fragment {
+public class HitsFragment extends Fragment {
     private RecyclerView rv;
-    private List<EntryPost> postData;
-    private PostAdapter postAdapter;
+    private List<EntryPost> hotListData;
+    private PostAdapter hotListAdapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -32,22 +34,23 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hits_favorite_group, container, false);
 
         rv = (RecyclerView) view.findViewById(R.id.rv_list);
-        postAdapter = new PostAdapter(getActivity());
-        rv.setAdapter(postAdapter);
+        hotListAdapter = new PostAdapter(getActivity());
+        rv.setAdapter(hotListAdapter);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        postData = new ArrayList<>();
-        postAdapter.setPostList(postData);
-        fetchFavoriteList();
+        hotListData = new ArrayList<>();
+        hotListAdapter.setPostList(hotListData);
+        fetchHotList();
+
         return view;
     }
 
-    private void fetchFavoriteList() {
-        BackendUtils.get(getActivity(), "hot", null, this::fetchFavoriteListCallback);
+    private void fetchHotList() {
+        BackendUtils.get(getActivity(), "hot", null, this::fetchHotListCallback);
     }
 
-    private void fetchFavoriteListCallback(JSONObject json) {
-        postData.clear();
+    private void fetchHotListCallback(JSONObject json) {
+        hotListData.clear();
         try {
             JSONArray arr = json.getJSONArray("entry");
             int length = arr.length();
@@ -57,15 +60,14 @@ public class FavoriteFragment extends Fragment {
                 String title = entry.getString("title");
                 int hotIndex = entry.getInt("hot_index");
                 int rank = entry.getInt("rank");
-                // TODO:
-                //  likes not available
-                int likes = entry.getInt("likes");
-                postData.add(new EntryPost(group, title, hotIndex, rank, likes));
+                int id = entry.getInt("id");
+                hotListData.add(new EntryPost(rank, id, title, hotIndex, group, "测试内容"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Collections.sort(postData);
-        postAdapter.setPostList(postData);
+        Collections.sort(hotListData);
+        hotListAdapter.setPostList(hotListData);
     }
+
 }
