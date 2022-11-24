@@ -1,4 +1,4 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
+
+import com.example.mysecondapp.R;
 
 public class PersonalFragment extends Fragment {
 

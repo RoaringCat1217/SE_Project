@@ -1,16 +1,17 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.StrictMode;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Toast;
+
+import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.LoginUtils;
+import com.example.mysecondapp.R;
+import com.example.mysecondapp.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         String id = etUserID.getText().toString().trim();
         String pwd = etUserPwd.getText().toString().trim();
         Map<String, String> query = new HashMap<>();
-        query.put("id", id);
-        query.put("pwd", pwd);
+        query.put("username", id);
+        query.put("password", pwd);
         BackendUtils.get(this, "register", query, this::signupCallback);
     }
 
@@ -88,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginSuccess() {
         LoginUtils.login = true;
+        UserInfo.userID = etUserID.getText().toString().trim();
         finish();
     }
 

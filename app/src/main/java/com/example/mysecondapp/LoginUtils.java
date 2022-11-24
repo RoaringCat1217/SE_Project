@@ -3,6 +3,8 @@ package com.example.mysecondapp;
 import android.content.Context;
 import android.content.Intent;
 
+import com.example.mysecondapp.activities.LoginActivity;
+
 import java.lang.ref.WeakReference;
 
 public class LoginUtils {

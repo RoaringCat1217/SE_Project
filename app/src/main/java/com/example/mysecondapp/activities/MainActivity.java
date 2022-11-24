@@ -1,9 +1,8 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Instrumentation;
@@ -11,16 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import org.json.*;
-
-import java.util.Collections;
-import java.util.List;
+import com.example.mysecondapp.fragments.EditFragment;
+import com.example.mysecondapp.fragments.FavoriteFragment;
+import com.example.mysecondapp.fragments.GroupFragment;
+import com.example.mysecondapp.fragments.HitsFragment;
+import com.example.mysecondapp.fragments.PersonalFragment;
+import com.example.mysecondapp.R;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener{
     private RadioGroup rgMain;
