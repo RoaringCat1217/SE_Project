@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="spinner_name">
-        <item>学五</item>
-        <item>信科</item>
-        <item>软工</item>
-        <item>夜奔</item>
-        <item>三角地</item>
-        <item>脱单</item>
+        <item>跳蚤市场</item>
+        <item>美食天地</item>
+        <item>资料共享</item>
     </array>
 </resources>
