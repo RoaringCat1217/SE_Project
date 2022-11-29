@@ -59,7 +59,8 @@ public class FavoriteFragment extends Fragment {
                 int rank = entry.getInt("rank");
                 // TODO:
                 //  likes not available
-                int likes = entry.getInt("likes");
+                // int likes = entry.getInt("likes");
+                int likes = 0;
                 postData.add(new EntryPost(group, title, hotIndex, rank, likes));
             }
         } catch (JSONException e) {

@@ -56,7 +56,10 @@ public class HitsFragment extends Fragment {
                 String title = entry.getString("title");
                 int hotIndex = entry.getInt("hot_index");
                 int rank = entry.getInt("rank");
-                int likes = entry.getInt("likes");
+                // TODO:
+                //  likes not available
+                // int likes = entry.getInt("likes");
+                int likes = 0;
                 hotListData.add(new EntryPost(group, title, hotIndex, rank, likes));
             }
         } catch (JSONException e) {
