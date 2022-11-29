@@ -36,33 +36,13 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public int getChildrenCount(int i) {
-        if(commentBeanList.get(i).getReplyList() == null){
-            return 0;
-        }else {
-            return commentBeanList.get(i).getReplyList().size()>0 ? commentBeanList.get(i).getReplyList().size():0;
-        }
-
-    }
-
-    @Override
     public Object getGroup(int i) {
         return commentBeanList.get(i);
     }
 
     @Override
-    public Object getChild(int i, int i1) {
-        return commentBeanList.get(i).getReplyList().get(i1);
-    }
-
-    @Override
     public long getGroupId(int groupPosition) {
         return groupPosition;
-    }
-
-    @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return getCombinedChildId(groupPosition, childPosition);
     }
 
     @Override
@@ -94,33 +74,6 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    @Override
-    public View getChildView(final int groupPosition, int childPosition, boolean b, View convertView, ViewGroup viewGroup) {
-        final ChildHolder childHolder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.comment_reply_item_layout,viewGroup, false);
-            childHolder = new ChildHolder(convertView);
-            convertView.setTag(childHolder);
-        }
-        else {
-            childHolder = (ChildHolder) convertView.getTag();
-        }
-
-        String replyUser = commentBeanList.get(groupPosition).getReplyList().get(childPosition).getNickName();
-        if(!TextUtils.isEmpty(replyUser)){
-            childHolder.tv_name.setText(replyUser + ":");
-        }
-
-        childHolder.tv_content.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getContent());
-
-        return convertView;
-    }
-
-    @Override
-    public boolean isChildSelectable(int i, int i1) {
-        return true;
-    }
-
     private class GroupHolder{
         private CircleImageView logo;
         private TextView tv_name, tv_content, tv_time;
@@ -129,14 +82,6 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
             tv_content = view.findViewById(R.id.comment_item_content);
             tv_name = view.findViewById(R.id.comment_item_userName);
             tv_time = view.findViewById(R.id.comment_item_time);
-        }
-    }
-
-    private class ChildHolder{
-        private TextView tv_name, tv_content;
-        public ChildHolder(View view) {
-            tv_name = (TextView) view.findViewById(R.id.reply_item_user);
-            tv_content = (TextView) view.findViewById(R.id.reply_item_content);
         }
     }
 
@@ -152,7 +97,62 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
 
     }
 
-    // 添加回复相关 先不管
+    // 回复相关，都先不管
+    @Override
+    public View getChildView(final int groupPosition, int childPosition, boolean b, View convertView, ViewGroup viewGroup) {
+//        final ChildHolder childHolder;
+//        if(convertView == null){
+//            convertView = LayoutInflater.from(context).inflate(R.layout.comment_reply_item_layout,viewGroup, false);
+//            childHolder = new ChildHolder(convertView);
+//            convertView.setTag(childHolder);
+//        }
+//        else {
+//            childHolder = (ChildHolder) convertView.getTag();
+//        }
+//
+//        String replyUser = commentBeanList.get(groupPosition).getReplyList().get(childPosition).getNickName();
+//        if(!TextUtils.isEmpty(replyUser)){
+//            childHolder.tv_name.setText(replyUser + ":");
+//        }
+//
+//        childHolder.tv_content.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getContent());
+
+        return convertView;
+    }
+
+    @Override
+    public int getChildrenCount(int i) {
+        if(commentBeanList.get(i).getReplyList() == null){
+            return 0;
+        }else {
+            return commentBeanList.get(i).getReplyList().size()>0 ? commentBeanList.get(i).getReplyList().size():0;
+        }
+
+    }
+
+    @Override
+    public Object getChild(int i, int i1) {
+        return commentBeanList.get(i).getReplyList().get(i1);
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return getCombinedChildId(groupPosition, childPosition);
+    }
+
+    @Override
+    public boolean isChildSelectable(int i, int i1) {
+        return true;
+    }
+
+    private class ChildHolder{
+        private TextView tv_name, tv_content;
+        public ChildHolder(View view) {
+            tv_name = (TextView) view.findViewById(R.id.reply_item_user);
+            tv_content = (TextView) view.findViewById(R.id.reply_item_content);
+        }
+    }
+
     public void addTheReplyData(ReplyDetailBean replyDetailBean, int groupPosition){
         if(replyDetailBean!=null){
             Log.e(TAG, "addTheReplyData: >>>>该刷新回复列表了:"+replyDetailBean.toString() );
