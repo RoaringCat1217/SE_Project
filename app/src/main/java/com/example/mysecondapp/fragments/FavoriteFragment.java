@@ -1,16 +1,19 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.models.EntryPost;
+import com.example.mysecondapp.adapters.PostAdapter;
+import com.example.mysecondapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +40,7 @@ public class FavoriteFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         postData = new ArrayList<>();
-        postAdapter.setHotList(postData);
+        postAdapter.setPostList(postData);
         fetchFavoriteList();
         return view;
     }
@@ -58,15 +61,21 @@ public class FavoriteFragment extends Fragment {
                 int hotIndex = entry.getInt("hot_index");
                 int rank = entry.getInt("rank");
                 // TODO:
+<<<<<<< HEAD:app/src/main/java/com/example/mysecondapp/FavoriteFragment.java
                 //  likes not available
                 // int likes = entry.getInt("likes");
                 int likes = 0;
                 postData.add(new EntryPost(group, title, hotIndex, rank, likes));
+=======
+                //  backend needs to return favorite list
+                int id = entry.getInt("id");
+                postData.add(new EntryPost(rank, id, title, hotIndex, group, "测试内容"));
+>>>>>>> 8fdb83e9187c25a308cf539ed555ade53248151b:app/src/main/java/com/example/mysecondapp/fragments/FavoriteFragment.java
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Collections.sort(postData);
-        postAdapter.setHotList(postData);
+        postAdapter.setPostList(postData);
     }
 }
