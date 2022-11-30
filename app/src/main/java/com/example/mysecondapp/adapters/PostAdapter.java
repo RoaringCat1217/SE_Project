@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mysecondapp.models.Constants;
 import com.example.mysecondapp.models.EntryPost;
 import com.example.mysecondapp.LoginUtils;
 import com.example.mysecondapp.R;
@@ -24,7 +25,6 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     private List<EntryPost> postList = new ArrayList<>();
-    public static final String POST_ID = "POST_ID";
     Context context;
 
     public PostAdapter(Context context) {
@@ -57,7 +57,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         holder.itemView.setOnClickListener(view -> {
             LoginUtils.checkLogin(context, ()->{
                 Bundle bundle = new Bundle();
-                bundle.putInt(POST_ID, entry.getPostID());
+                bundle.putInt(Constants.POST_ID, entry.getPostID());
                 try {
                     Intent intent = new Intent(view.getContext(), PostDisplayActivity.class);
                     intent.putExtras(bundle);

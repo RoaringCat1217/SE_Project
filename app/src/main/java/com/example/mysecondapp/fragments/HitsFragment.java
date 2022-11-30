@@ -45,7 +45,7 @@ public class HitsFragment extends Fragment {
         return view;
     }
 
-    private void fetchHotList() {
+    public void fetchHotList() {
         BackendUtils.get(getActivity(), "hot", null, this::fetchHotListCallback);
     }
 
