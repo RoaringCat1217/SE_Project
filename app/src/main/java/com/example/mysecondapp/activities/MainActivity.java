@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.mysecondapp.LoginUtils;
 import com.example.mysecondapp.fragments.EditFragment;
 import com.example.mysecondapp.fragments.FavoriteFragment;
 import com.example.mysecondapp.fragments.GroupFragment;
@@ -68,38 +69,53 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         FragmentTransaction fTransaction = fragmentManager.beginTransaction();
         hideAllFragment(fTransaction);
-        if(checkedId == R.id.rb_hits){
-            if(hitsFragment == null){
+        if (checkedId == R.id.rb_hits) {
+            if (hitsFragment == null) {
                 hitsFragment = new HitsFragment();
                 fTransaction.add(R.id.ly_content,hitsFragment);
-            }else
+            } else {
+                // 切换回来时更新下热榜
+                hitsFragment.fetchHotList();
                 fTransaction.show(hitsFragment);
-        }else if(checkedId == R.id.rb_favorite){
-            if(favoriteFragment == null){
+            }
+            fTransaction.commit();
+        } else if (checkedId == R.id.rb_favorite){
+            if (favoriteFragment == null){
                 favoriteFragment = new FavoriteFragment();
                 fTransaction.add(R.id.ly_content,favoriteFragment);
-            }else
+            } else
                 fTransaction.show(favoriteFragment);
-        }else if(checkedId == R.id.rb_edit){
-            if(editFragment == null){
-                editFragment = new EditFragment();
-                fTransaction.add(R.id.ly_content,editFragment);
-            }else
-                fTransaction.show(editFragment);
-        }else if(checkedId == R.id.rb_group){
-            if(groupFragment == null){
+            fTransaction.commit();
+        } else if(checkedId == R.id.rb_edit) {
+            // 发帖要求登录
+            LoginUtils.checkLogin(this, () -> {
+                if (editFragment == null) {
+                    editFragment = new EditFragment();
+                    fTransaction.add(R.id.ly_content, editFragment);
+                }
+                else
+                    fTransaction.show(editFragment);
+                fTransaction.commit();
+            });
+        } else if (checkedId == R.id.rb_group) {
+            if (groupFragment == null) {
                 groupFragment = new GroupFragment();
                 fTransaction.add(R.id.ly_content,groupFragment);
-            }else
+            } else
                 fTransaction.show(groupFragment);
-        }else if(checkedId == R.id.rb_personal){
-            if(personalFragment == null){
-                personalFragment = new PersonalFragment("个人");
-                fTransaction.add(R.id.ly_content,personalFragment);
-            }else
-                fTransaction.show(personalFragment);
+            fTransaction.commit();
+        } else if(checkedId == R.id.rb_personal) {
+            // 查看个人信息要求登录
+            LoginUtils.checkLogin(this, ()->{
+                if (personalFragment == null) {
+                    personalFragment = new PersonalFragment("个人");
+                    fTransaction.add(R.id.ly_content, personalFragment);
+                } else
+                    fTransaction.show(personalFragment);
+                fTransaction.commit();
+            });
         }
-        fTransaction.commit();
+
     }
 
     //隐藏所有Fragment

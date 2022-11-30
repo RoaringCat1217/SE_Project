@@ -21,6 +21,7 @@ import com.example.mysecondapp.BackendUtils;
 import com.example.mysecondapp.beans.CommentBean;
 import com.example.mysecondapp.beans.CommentDetailBean;
 import com.example.mysecondapp.adapters.CommentExpandAdapter;
+import com.example.mysecondapp.models.Constants;
 import com.example.mysecondapp.models.Post;
 import com.example.mysecondapp.R;
 import com.example.mysecondapp.UserInfo;
@@ -36,7 +37,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PostDisplayActivity extends AppCompatActivity {
-    public static final String POST_ID = "POST_ID";
     int postID;
     Post post;
     ImageView likeIcon;
@@ -59,7 +59,8 @@ public class PostDisplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO: 后端返回是否收藏的信息
-        postID = getIntent().getIntExtra(POST_ID, -1);
+        postID = getIntent().getIntExtra(Constants.POST_ID, -1);
+
         fetchPost(postID);
 
         setContentView(R.layout.post);
