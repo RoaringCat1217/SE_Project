@@ -25,10 +25,18 @@ public class Post {
 
     public void toggleLiked() {
         this.liked = !this.liked;
+        if (this.liked)
+            this.likes += 1;
+        else
+            this.likes -= 1;
     }
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public int getLikes() {
+        return this.likes;
     }
 
     public boolean isStared() {
