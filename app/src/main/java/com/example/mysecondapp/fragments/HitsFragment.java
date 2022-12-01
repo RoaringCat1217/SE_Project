@@ -60,16 +60,16 @@ public class HitsFragment extends Fragment {
                 String title = entry.getString("title");
                 int hotIndex = entry.getInt("hot_index");
                 int rank = entry.getInt("rank");
-<<<<<<< HEAD:app/src/main/java/com/example/mysecondapp/HitsFragment.java
+//<<<<<<< HEAD:app/src/main/java/com/example/mysecondapp/HitsFragment.java
                 // TODO:
                 //  likes not available
                 // int likes = entry.getInt("likes");
                 int likes = 0;
-                hotListData.add(new EntryPost(group, title, hotIndex, rank, likes));
-=======
+                //hotListData.add(new EntryPost(group, title, hotIndex, rank, likes));
+//=======
                 int id = entry.getInt("id");
                 hotListData.add(new EntryPost(rank, id, title, hotIndex, group, "测试内容"));
->>>>>>> 8fdb83e9187c25a308cf539ed555ade53248151b:app/src/main/java/com/example/mysecondapp/fragments/HitsFragment.java
+//>>>>>>> 8fdb83e9187c25a308cf539ed555ade53248151b:app/src/main/java/com/example/mysecondapp/fragments/HitsFragment.java
             }
         } catch (JSONException e) {
             e.printStackTrace();

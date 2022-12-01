@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.app.Instrumentation;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -14,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.mysecondapp.LoginUtils;
+import com.example.mysecondapp.UserInfo;
 import com.example.mysecondapp.fragments.EditFragment;
 import com.example.mysecondapp.fragments.FavoriteFragment;
 import com.example.mysecondapp.fragments.GroupFragment;
@@ -93,11 +96,17 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             }else
                 fTransaction.show(groupFragment);
         }else if(checkedId == R.id.rb_personal){
+            LoginUtils.checkLogin(this, ()->{
+                System.out.println("log in " + UserInfo.userID);
+                personalFragment.showInfo(UserInfo.userID);
+            });
             if(personalFragment == null){
-                personalFragment = new PersonalFragment("个人");
+                personalFragment = new PersonalFragment(UserInfo.userID);
                 fTransaction.add(R.id.ly_content,personalFragment);
-            }else
+            }
+            else{
                 fTransaction.show(personalFragment);
+            }
         }
         fTransaction.commit();
     }

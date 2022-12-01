@@ -61,16 +61,16 @@ public class FavoriteFragment extends Fragment {
                 int hotIndex = entry.getInt("hot_index");
                 int rank = entry.getInt("rank");
                 // TODO:
-<<<<<<< HEAD:app/src/main/java/com/example/mysecondapp/FavoriteFragment.java
+//<<<<<<< HEAD:app/src/main/java/com/example/mysecondapp/FavoriteFragment.java
                 //  likes not available
                 // int likes = entry.getInt("likes");
                 int likes = 0;
-                postData.add(new EntryPost(group, title, hotIndex, rank, likes));
-=======
+                //postData.add(new EntryPost(group, title, hotIndex, rank, likes));
+//=======
                 //  backend needs to return favorite list
                 int id = entry.getInt("id");
                 postData.add(new EntryPost(rank, id, title, hotIndex, group, "测试内容"));
->>>>>>> 8fdb83e9187c25a308cf539ed555ade53248151b:app/src/main/java/com/example/mysecondapp/fragments/FavoriteFragment.java
+//>>>>>>> 8fdb83e9187c25a308cf539ed555ade53248151b:app/src/main/java/com/example/mysecondapp/fragments/FavoriteFragment.java
             }
         } catch (JSONException e) {
             e.printStackTrace();
