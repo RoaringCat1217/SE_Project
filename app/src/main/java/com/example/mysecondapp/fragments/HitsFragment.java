@@ -1,15 +1,19 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.models.EntryPost;
+import com.example.mysecondapp.adapters.PostAdapter;
+import com.example.mysecondapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +39,7 @@ public class HitsFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         hotListData = new ArrayList<>();
-        hotListAdapter.setHotList(hotListData);
+        hotListAdapter.setPostList(hotListData);
         fetchHotList();
 
         return view;
@@ -56,17 +60,22 @@ public class HitsFragment extends Fragment {
                 String title = entry.getString("title");
                 int hotIndex = entry.getInt("hot_index");
                 int rank = entry.getInt("rank");
+//<<<<<<< HEAD:app/src/main/java/com/example/mysecondapp/HitsFragment.java
                 // TODO:
                 //  likes not available
                 // int likes = entry.getInt("likes");
                 int likes = 0;
-                hotListData.add(new EntryPost(group, title, hotIndex, rank, likes));
+                //hotListData.add(new EntryPost(group, title, hotIndex, rank, likes));
+//=======
+                int id = entry.getInt("id");
+                hotListData.add(new EntryPost(rank, id, title, hotIndex, group, "测试内容"));
+//>>>>>>> 8fdb83e9187c25a308cf539ed555ade53248151b:app/src/main/java/com/example/mysecondapp/fragments/HitsFragment.java
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Collections.sort(hotListData);
-        hotListAdapter.setHotList(hotListData);
+        hotListAdapter.setPostList(hotListData);
     }
 
 }
