@@ -1,10 +1,13 @@
 package com.example.mysecondapp.activities;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PostDisplayActivity extends AppCompatActivity {
     int postID;
     Post post;
@@ -45,6 +50,7 @@ public class PostDisplayActivity extends AppCompatActivity {
     TextView tvTitle;
     TextView tvContent;
     TextView tvLikes;
+    CircleImageView userAvatar;
 
     private static final String TAG = "MainActivity";
     private TextView bt_comment;
@@ -61,16 +67,14 @@ public class PostDisplayActivity extends AppCompatActivity {
         // TODO: 后端返回是否收藏的信息
         postID = getIntent().getIntExtra(Constants.POST_ID, -1);
 
-        fetchPost(postID);
-
         setContentView(R.layout.post);
-
         tvPosterID = findViewById(R.id.usr_id);
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
         tvLikes = findViewById(R.id.like_number);
         likeIcon = findViewById(R.id.like_icon);
         starIcon = findViewById(R.id.star_icon);
+        userAvatar = findViewById(R.id.usr_portrait);
 
         // 输出用户和帖子
         // ...
@@ -101,9 +105,9 @@ public class PostDisplayActivity extends AppCompatActivity {
                 }
             }
         });
-
+        fetchPost(postID);
         // 初始化评论界面
-        initView();
+        // initView();
     }
 
     private void initView() {
@@ -281,12 +285,9 @@ public class PostDisplayActivity extends AppCompatActivity {
 
     private void like() {
         Map<String, String> query = new HashMap<>();
-        query.put("user_name", UserInfo.userID);
+        query.put("username", UserInfo.userID);
         query.put("post_id", Integer.valueOf(postID).toString());
-        if (post.isLiked())
-            query.put("post_id", Integer.valueOf(-1).toString());
-        else
-            query.put("post_id", Integer.valueOf(1).toString());
+        query.put("like", Integer.valueOf(1).toString());
         BackendUtils.get(this, "like", query, this::likeCallback);
     }
 
@@ -294,12 +295,12 @@ public class PostDisplayActivity extends AppCompatActivity {
         try {
             long retCode = json.getLong("code");
             if (retCode == 1) {
-                post.setLikes(json.getInt("likes"));
                 post.toggleLiked();
                 if (post.isLiked())
                     likeIcon.setImageResource(R.drawable.thumbs_up_selected);
                 else
                     likeIcon.setImageResource(R.drawable.thumbs_up_unselected);
+                tvLikes.setText(Integer.valueOf(post.getLikes()).toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -309,7 +310,6 @@ public class PostDisplayActivity extends AppCompatActivity {
     private void fetchPost(int postID) {
         Map<String, String> query = new HashMap<>();
         query.put("user_name", UserInfo.userID);
-        // TODO: JSON数据类型问题？ 后端最好也返回post_id.
         query.put("post_id", Integer.valueOf(postID).toString());
         BackendUtils.get(this, "getpost", query, this::fetchPostCallback);
     }
@@ -318,19 +318,44 @@ public class PostDisplayActivity extends AppCompatActivity {
         try {
             long retCode = json.getLong("code");
             if (retCode == 1) {
-                // TODO: 后端要返回发帖人ID和是否收藏
                 String posterID = json.getString("poster");
                 String title = json.getString("title");
                 String content = json.getString("content");
                 int likes = json.getInt("likes");
                 boolean isLiked = json.getInt("liked") == 1;
-                boolean isStared = false;
+                boolean isStared = json.getInt("stared") == 1;
                 post = new Post(postID, posterID, title, content, likes, isLiked, isStared);
                 tvPosterID.setText(posterID);
                 tvTitle.setText(title);
                 tvContent.setText(content);
                 tvLikes.setText(Integer.valueOf(likes).toString());
+                if (post.isLiked())
+                    likeIcon.setImageResource(R.drawable.thumbs_up_selected);
+                else
+                    likeIcon.setImageResource(R.drawable.thumbs_up_unselected);
+                downloadAvatar(posterID);
+            }
+            else
+                Toast.makeText(this, "出错!", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void downloadAvatar(String posterID) {
+        Map<String, String> query = new HashMap<>();
+        query.put("user_name", posterID);
+        BackendUtils.get(this, "getavater", query, this::downloadAvatarCallback);
+    }
+
+    private void downloadAvatarCallback(JSONObject json) {
+        try {
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                String imgStr = json.getString("image");
+                byte[] bitmapArray = Base64.decode(imgStr.split(",")[1], Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+                userAvatar.setImageBitmap(bitmap);
             }
             else
                 Toast.makeText(this, "出错!", Toast.LENGTH_SHORT).show();

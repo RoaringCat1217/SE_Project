@@ -20,6 +20,7 @@ import com.example.mysecondapp.R;
 import com.example.mysecondapp.UserInfo;
 import com.example.mysecondapp.activities.LoginActivity;
 import com.example.mysecondapp.activities.PostDisplayActivity;
+import com.example.mysecondapp.models.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,6 +83,7 @@ public class EditFragment extends Fragment {
                 etContent.setText(null);
                 int postID = json.getInt("post_id");
                 Bundle bundle = new Bundle();
+                bundle.putInt(Constants.POST_ID, postID);
                 try {
                     Intent intent = new Intent(getContext(), PostDisplayActivity.class);
                     intent.putExtras(bundle);
