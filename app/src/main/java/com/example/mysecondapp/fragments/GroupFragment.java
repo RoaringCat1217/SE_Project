@@ -30,12 +30,9 @@ public class GroupFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_list);
         List<EntryGroup> groupList = new ArrayList<>();
-        groupList.add(new EntryGroup("学五"));
-        groupList.add(new EntryGroup("信科"));
-        groupList.add(new EntryGroup("软工"));
-        groupList.add(new EntryGroup("夜奔"));
-        groupList.add(new EntryGroup("三角地"));
-        groupList.add(new EntryGroup("脱单"));
+        groupList.add(new EntryGroup("跳蚤市场"));
+        groupList.add(new EntryGroup("美食天地"));
+        groupList.add(new EntryGroup("资料共享"));
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);

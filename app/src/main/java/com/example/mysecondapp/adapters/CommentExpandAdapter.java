@@ -1,43 +1,38 @@
 package com.example.mysecondapp.adapters;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mysecondapp.R;
-import com.example.mysecondapp.beans.CommentDetailBean;
+import com.example.mysecondapp.models.CommentItem;
 import com.example.mysecondapp.beans.ReplyDetailBean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentExpandAdapter extends BaseExpandableListAdapter {
     private static final String TAG = "CommentExpandAdapter";
-    private List<CommentDetailBean> commentBeanList;
+    private List<CommentItem> commentItemList;
     private Context context;
 
-    public CommentExpandAdapter(Context context, List<CommentDetailBean> commentBeanList)               {
+    public CommentExpandAdapter(Context context, List<CommentItem> commentItemList)               {
         this.context = context;
-        this.commentBeanList = commentBeanList;
+        this.commentItemList = commentItemList;
     }
 
     @Override
     public int getGroupCount() {
-        return commentBeanList.size();
+        return commentItemList.size();
     }
 
     @Override
     public Object getGroup(int i) {
-        return commentBeanList.get(i);
+        return commentItemList.get(i);
     }
 
     @Override
@@ -50,54 +45,67 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    // 展示所有评论（group代表评论 children代表回复）
+    // 展示所有评论
     @Override
     public View getGroupView(final int groupPosition, boolean isExpand, View convertView, ViewGroup viewGroup) {
         final GroupHolder groupHolder;
 
         if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.comment_item_layout, viewGroup, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.comment_item, viewGroup, false);
             groupHolder = new GroupHolder(convertView);
             convertView.setTag(groupHolder);
         }else {
             groupHolder = (GroupHolder) convertView.getTag();
         }
-        Glide.with(context).load(R.drawable.star_selected)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .error(R.mipmap.ic_launcher)
-                .centerCrop()
-                .into(groupHolder.logo);
-        groupHolder.tv_name.setText(commentBeanList.get(groupPosition).getNickName());
-        groupHolder.tv_time.setText(commentBeanList.get(groupPosition).getCreateDate());
-        groupHolder.tv_content.setText(commentBeanList.get(groupPosition).getContent());
+        // 显示头像
+        groupHolder.replyName.setText(commentItemList.get(groupPosition).getReplyName());
+        groupHolder.replyTime.setText(commentItemList.get(groupPosition).getReplyTime());
+        groupHolder.replyContent.setText(commentItemList.get(groupPosition).getReplyContent());
 
         return convertView;
     }
 
     private class GroupHolder{
-        private CircleImageView logo;
-        private TextView tv_name, tv_content, tv_time;
+        private CircleImageView replyPortrait;
+        private TextView replyName, replyTime, repliedName, repliedContent, replyContent;
         public GroupHolder(View view) {
-            logo =  view.findViewById(R.id.comment_item_logo);
-            tv_content = view.findViewById(R.id.comment_item_content);
-            tv_name = view.findViewById(R.id.comment_item_userName);
-            tv_time = view.findViewById(R.id.comment_item_time);
+            replyPortrait =  view.findViewById(R.id.reply_portrait);
+            replyName = view.findViewById(R.id.reply_name);
+            replyTime = view.findViewById(R.id.reply_time);
+            repliedName = view.findViewById(R.id.replied_name);
+            repliedContent = view.findViewById(R.id.replied_content);
+            replyContent = view.findViewById(R.id.reply_content);
         }
     }
 
     // 评论成功后插入评论
-    public void addTheCommentData(CommentDetailBean commentDetailBean){
-        if(commentDetailBean!=null){
-
-            commentBeanList.add(commentDetailBean);
+    public void addCommentData(CommentItem commentItem){
+        if(commentItem!=null){
+            commentItemList.add(commentItem);
             notifyDataSetChanged();
         }else {
             throw new IllegalArgumentException("评论数据为空!");
         }
-
     }
 
-    // 回复相关，都先不管
+    // 以下是嵌套回复相关，都先不管
+
+    public void addReplyData(CommentItem replyDetailBean, int groupPosition){
+//        if(replyDetailBean!=null){
+//            Log.e(TAG, "addTheReplyData: >>>>该刷新回复列表了:"+replyDetailBean.toString() );
+//            if(commentBeanList.get(groupPosition).getReplyList() != null ){
+//                commentBeanList.get(groupPosition).getReplyList().add(replyDetailBean);
+//            }else {
+//                List<ReplyDetailBean> replyList = new ArrayList<>();
+//                replyList.add(replyDetailBean);
+//                commentBeanList.get(groupPosition).setReplyList(replyList);
+//            }
+//            notifyDataSetChanged();
+//        }else {
+//            throw new IllegalArgumentException("回复数据为空!");
+//        }
+    }
+
     @Override
     public View getChildView(final int groupPosition, int childPosition, boolean b, View convertView, ViewGroup viewGroup) {
 //        final ChildHolder childHolder;
@@ -122,17 +130,17 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        if(commentBeanList.get(i).getReplyList() == null){
+        if(commentItemList.get(i).getReplyList() == null){
             return 0;
         }else {
-            return commentBeanList.get(i).getReplyList().size()>0 ? commentBeanList.get(i).getReplyList().size():0;
+            return commentItemList.get(i).getReplyList().size()>0 ? commentItemList.get(i).getReplyList().size():0;
         }
 
     }
 
     @Override
     public Object getChild(int i, int i1) {
-        return commentBeanList.get(i).getReplyList().get(i1);
+        return commentItemList.get(i).getReplyList().get(i1);
     }
 
     @Override
@@ -153,30 +161,12 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         }
     }
 
-    public void addTheReplyData(ReplyDetailBean replyDetailBean, int groupPosition){
-        if(replyDetailBean!=null){
-            Log.e(TAG, "addTheReplyData: >>>>该刷新回复列表了:"+replyDetailBean.toString() );
-            if(commentBeanList.get(groupPosition).getReplyList() != null ){
-                commentBeanList.get(groupPosition).getReplyList().add(replyDetailBean);
-            }else {
-                List<ReplyDetailBean> replyList = new ArrayList<>();
-                replyList.add(replyDetailBean);
-                commentBeanList.get(groupPosition).setReplyList(replyList);
-            }
-            notifyDataSetChanged();
-        }else {
-            throw new IllegalArgumentException("回复数据为空!");
-        }
-
-    }
-
     private void addReplyList(List<ReplyDetailBean> replyBeanList, int groupPosition){
-        if(commentBeanList.get(groupPosition).getReplyList() != null ){
-            commentBeanList.get(groupPosition).getReplyList().clear();
-            commentBeanList.get(groupPosition).getReplyList().addAll(replyBeanList);
+        if(commentItemList.get(groupPosition).getReplyList() != null ){
+            commentItemList.get(groupPosition).getReplyList().clear();
+            commentItemList.get(groupPosition).getReplyList().addAll(replyBeanList);
         }else {
-
-            commentBeanList.get(groupPosition).setReplyList(replyBeanList);
+            commentItemList.get(groupPosition).setReplyList(replyBeanList);
         }
 
         notifyDataSetChanged();

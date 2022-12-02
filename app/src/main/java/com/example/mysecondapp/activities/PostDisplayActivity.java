@@ -2,12 +2,10 @@ package com.example.mysecondapp.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,19 +19,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mysecondapp.BackendUtils;
-import com.example.mysecondapp.beans.CommentBean;
-import com.example.mysecondapp.beans.CommentDetailBean;
+import com.example.mysecondapp.models.CommentItem;
 import com.example.mysecondapp.adapters.CommentExpandAdapter;
 import com.example.mysecondapp.models.Constants;
 import com.example.mysecondapp.models.Post;
 import com.example.mysecondapp.R;
 import com.example.mysecondapp.UserInfo;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,15 +48,6 @@ public class PostDisplayActivity extends AppCompatActivity {
     TextView tvContent;
     TextView tvLikes;
     CircleImageView userAvatar;
-
-    private static final String TAG = "MainActivity";
-    private TextView bt_comment;
-    private ExpandableListView expandableListView;
-    private CommentExpandAdapter adapter;
-    private CommentBean commentBean;
-    private List<CommentDetailBean> commentsList;
-    private BottomSheetDialog dialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,64 +94,127 @@ public class PostDisplayActivity extends AppCompatActivity {
             }
         });
         fetchPost(postID);
+
         // 初始化评论界面
-        // initView();
+        initView();
     }
 
+    private static final String TAG = "MainActivity";
+    private TextView comment_button;
+    private ExpandableListView expandableListView;
+    private CommentExpandAdapter adapter;
+    private List<CommentItem> commentItemList;
+    private BottomSheetDialog dialog;
+
     private void initView() {
-        expandableListView = (ExpandableListView) findViewById(R.id.detail_page_lv_comment);
-        bt_comment = (TextView) findViewById(R.id.detail_page_do_comment);
-        bt_comment.setOnClickListener(new View.OnClickListener() {
+        expandableListView = (ExpandableListView) findViewById(R.id.comment_list);
+        comment_button = (TextView) findViewById(R.id.comment_button);
+        comment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCommentDialog();
             }
         });
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        // 评论列表
-        commentsList = generateTestData();
-        initExpandableListView(commentsList);
+        // 显示评论列表
+        commentItemList = fetchData();
+        initExpandableListView(commentItemList);
     }
 
-    // 初始化评论和回复列表
-    private void initExpandableListView(final List<CommentDetailBean> commentList) {
+    // 初始化评论列表
+    private void initExpandableListView(final List<CommentItem> commentList) {
         expandableListView.setGroupIndicator(null);
-        //默认展开所有的
         adapter = new CommentExpandAdapter(this, commentList);
         expandableListView.setAdapter(adapter);
         for (int i = 0; i < commentList.size(); i++) {
             expandableListView.expandGroup(i);
         }
-        // 先认为评论没有回复，则不能点开
-//        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-//            @Override
-//            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
-//                boolean isExpanded = expandableListView.isGroupExpanded(groupPosition);
-//                Log.e(TAG, "onGroupClick: 当前的评论id>>>" + commentList.get(groupPosition).getId());
-////                if(isExpanded){
-////                    expandableListView.collapseGroup(groupPosition);
-////                }else {
-////                    expandableListView.expandGroup(groupPosition, true);
-////                }
-//                showReplyDialog(groupPosition);
-//                return true;
-//            }
-//        });
-//
-//        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//            @Override
-//            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-//                //Toast.makeText(, "点击了回复", Toast.LENGTH_SHORT).show();
-//                return false;
-//            }
-//        });
+        // 点击某条评论：弹出输入框 发送后更新
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
+                // 全部线性展开，没有分组展开了
+                // boolean isExpanded = expandableListView.isGroupExpanded(groupPosition);
+                Log.e(TAG, "onGroupClick: 当前的评论id>>>" + commentList.get(groupPosition).getId());
+//                if(isExpanded){
+//                    expandableListView.collapseGroup(groupPosition);
+//                }else {
+//                    expandableListView.expandGroup(groupPosition, true);
+//                }
+                showReplyDialog(groupPosition);
+                return true;
+            }
+        });
     }
 
-    private List<CommentDetailBean> generateTestData(){
-//        Gson gson = new Gson();
-//        commentBean = gson.fromJson(testJson, CommentBean.class);
-        List<CommentDetailBean> commentList = commentBean.getData().getList();
+    // 去后端拿评论数据
+    private List<CommentItem> fetchData(){
+        List<CommentItem> commentList = testData();
         return commentList;
+    }
+    private List<CommentItem> testData(){
+        List<CommentItem> commentList = new ArrayList();
+        commentList.add(new CommentItem("甲", "沙发", "刚刚"));
+        commentList.add(new CommentItem("乙", "楼上牛逼", "刚刚"));
+        return commentList;
+    }
+
+    // 弹出评论框：comment_box
+    private void showCommentDialog(){
+        dialog = new BottomSheetDialog(this);
+        View commentView = LayoutInflater.from(this).inflate(R.layout.comment_box,null);
+        EditText commentText = (EditText) commentView.findViewById(R.id.comment_text);
+        Button commentSend = (Button) commentView.findViewById(R.id.comment_send);
+        dialog.setContentView(commentView);
+
+        commentSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String commentContent = commentText.getText().toString().trim();
+                if(!TextUtils.isEmpty(commentContent)){
+                    dialog.dismiss();
+                    // TODO:
+                    // 直接在这个类里拿到tvTitle tvContent...
+                    // 发给后端
+                    // 后端回复以后展示commentItem
+                    CommentItem commentItem = new CommentItem("小明", commentContent,"刚刚");
+                    adapter.addCommentData(commentItem);
+                }else {
+                    Toast.makeText(PostDisplayActivity.this,"评论内容不能为空",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.show();
+    }
+
+    // 弹出回复框：comment_box
+    // 和showCommentDialog差不多
+    private void showReplyDialog(final int position){
+        dialog = new BottomSheetDialog(this);
+        View commentView = LayoutInflater.from(this).inflate(R.layout.comment_box,null);
+        EditText commentText = (EditText) commentView.findViewById(R.id.comment_text);
+        Button commentSend = (Button) commentView.findViewById(R.id.comment_send);
+        commentText.setHint("回复 " + commentItemList.get(position).getReplyName() + " 的评论:");
+        dialog.setContentView(commentView);
+
+        commentSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String commentContent = commentText.getText().toString().trim();
+                if(!TextUtils.isEmpty(commentContent)){
+                    dialog.dismiss();
+                    // TODO:
+                    // 通过position拿到被回复者的post_id、名字、内容等: commentItemList.get(position).get...()
+                    // 发给后端
+                    // 后端回复以后展示commentItem
+                    CommentItem commentItem = new CommentItem("嘿嘿", commentContent,"刚刚");
+                    adapter.addCommentData(commentItem);
+                }else {
+                    Toast.makeText(PostDisplayActivity.this,"回复内容不能为空",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.show();
     }
 
     // 不知道这个是什么
@@ -175,113 +226,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    // 弹出评论框：comment_dialog_layout
-    private void showCommentDialog(){
-        dialog = new BottomSheetDialog(this);
-        View commentView = LayoutInflater.from(this).inflate(R.layout.comment_dialog_layout,null);
-        final EditText commentText = (EditText) commentView.findViewById(R.id.dialog_comment_et);
-        final Button bt_comment = (Button) commentView.findViewById(R.id.dialog_comment_bt);
-        dialog.setContentView(commentView);
-        /**
-         * 解决bsd显示不全的情况
-         */
-        View parent = (View) commentView.getParent();
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
-        commentView.measure(0,0);
-        behavior.setPeekHeight(commentView.getMeasuredHeight());
-
-        // 用户评论：点击了评论的发送按钮
-        bt_comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String commentContent = commentText.getText().toString().trim();
-                if(!TextUtils.isEmpty(commentContent)){
-
-                    //commentOnWork(commentContent);
-                    dialog.dismiss();
-                    CommentDetailBean detailBean = new CommentDetailBean("小明", commentContent,"刚刚");
-                    adapter.addTheCommentData(detailBean);
-                    // Toast.makeText(MainActivity.this,"评论成功",Toast.LENGTH_SHORT).show();
-
-                }else {
-                    // Toast.makeText(MainActivity.this,"评论内容不能为空",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        // 不知道这是啥
-        commentText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!TextUtils.isEmpty(charSequence) && charSequence.length()>2){
-                    bt_comment.setBackgroundColor(Color.parseColor("#FFB568"));
-                }else {
-                    bt_comment.setBackgroundColor(Color.parseColor("#D8D8D8"));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        dialog.show();
-    }
-
-    // 弹出回复框：comment_dialog_layout
-    // 先无回复
-//    private void showReplyDialog(final int position){
-//        dialog = new BottomSheetDialog(this);
-//        View commentView = LayoutInflater.from(this).inflate(R.layout.comment_dialog_layout,null);
-//        final EditText commentText = (EditText) commentView.findViewById(R.id.dialog_comment_et);
-//        final Button bt_comment = (Button) commentView.findViewById(R.id.dialog_comment_bt);
-//        commentText.setHint("回复 " + commentsList.get(position).getNickName() + " 的评论:");
-//        dialog.setContentView(commentView);
-//        bt_comment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String replyContent = commentText.getText().toString().trim();
-//                if(!TextUtils.isEmpty(replyContent)){
-//
-//                    dialog.dismiss();
-//                    ReplyDetailBean detailBean = new ReplyDetailBean("小红",replyContent);
-//                    adapter.addTheReplyData(detailBean, position);
-//                    expandableListView.expandGroup(position);
-//                    Toast.makeText(MainActivity.this,"回复成功",Toast.LENGTH_SHORT).show();
-//                }else {
-//                    Toast.makeText(MainActivity.this,"回复内容不能为空",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//        commentText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                if(!TextUtils.isEmpty(charSequence) && charSequence.length()>2){
-//                    bt_comment.setBackgroundColor(Color.parseColor("#FFB568"));
-//                }else {
-//                    bt_comment.setBackgroundColor(Color.parseColor("#D8D8D8"));
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//            }
-//        });
-//        dialog.show();
-//    }
-
 
     private void like() {
         Map<String, String> query = new HashMap<>();

@@ -1,5 +1,6 @@
 package com.example.mysecondapp.beans;
 
+// 暂时没用 不过先别删
 public class ReplyDetailBean {
     private String nickName;
     private String userLogo;
