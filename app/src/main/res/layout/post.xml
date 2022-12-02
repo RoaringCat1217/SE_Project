@@ -114,14 +114,14 @@
         </LinearLayout>
 
         <ExpandableListView
-            android:id="@+id/detail_page_lv_comment"
+            android:id="@+id/comment_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:listSelector="@android:color/transparent"
             android:scrollbars="none"/>
 
         <TextView
-            android:id="@+id/detail_page_do_comment"
+            android:id="@+id/comment_button"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:textColor="#B6B6B6"

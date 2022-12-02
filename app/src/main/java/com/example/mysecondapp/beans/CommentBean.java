@@ -1,7 +1,9 @@
 package com.example.mysecondapp.beans;
 
-import java.util.List;
+import com.example.mysecondapp.models.CommentItem;
 
+import java.util.List;
+// 暂时没用 不过先别删
 public class CommentBean {
     private int code;
     private String message;
@@ -30,7 +32,7 @@ public class CommentBean {
     public class Data {
 
         private int total;
-        private List<CommentDetailBean> list;
+        private List<CommentItem> list;
         public void setTotal(int total) {
             this.total = total;
         }
@@ -38,10 +40,10 @@ public class CommentBean {
             return total;
         }
 
-        public void setList(List<CommentDetailBean> list) {
+        public void setList(List<CommentItem> list) {
             this.list = list;
         }
-        public List<CommentDetailBean> getList() {
+        public List<CommentItem> getList() {
             return list;
         }
 

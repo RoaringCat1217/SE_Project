@@ -4,8 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <EditText
-        android:id="@+id/dialog_comment_et"
+        android:id="@+id/comment_text"
         android:layout_width="match_parent"
         android:layout_height="105dp"
         android:background="@drawable/comment_dialog_et_selector"
@@ -20,7 +21,7 @@
 
     <Button
         android:background="@drawable/round_text_bg"
-        android:id="@+id/dialog_comment_bt"
+        android:id="@+id/comment_send"
         android:layout_width="85dp"
         android:layout_height="45dp"
         android:layout_marginStart="315dp"

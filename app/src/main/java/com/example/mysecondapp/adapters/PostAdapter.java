@@ -45,9 +45,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         EntryPost entry = postList.get(position);
-        // TODO: 用URL请求头像
+        // 浏览帖子没有用户头像和昵称
         // holder.ivUsrPortrait.setImageResource(entry.getUsrPortrait());
-        holder.tvUsrID.setText(Integer.valueOf(entry.getPostID()).toString());
+        // holder.tvUsrID.setText(Integer.valueOf(entry.getPostID()).toString());
         holder.tvTitle.setText(entry.getTitle());
         holder.tvContent.setText(entry.getContent());
         holder.tvTag.setText(entry.getTag()); // 去掉xml里我写的“鹊桥”
@@ -80,16 +80,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivUsrPortrait;
-        TextView tvUsrID;
+        // ImageView ivUsrPortrait;
+        // TextView tvUsrID;
         TextView tvTitle;
         TextView tvContent;
         TextView tvTag; // 去掉点赞按钮以后新加的
 
         public ViewHolder(@NonNull View v) {
             super(v);
-            ivUsrPortrait = v.findViewById(R.id.ivUsrPortrait);
-            tvUsrID = v.findViewById(R.id.tvUsrID);
+            // ivUsrPortrait = v.findViewById(R.id.ivUsrPortrait);
+            // tvUsrID = v.findViewById(R.id.tvUsrID);
             tvTitle = v.findViewById(R.id.tvTitle);
             tvContent = v.findViewById(R.id.tvContent);
             tvTag = v.findViewById(R.id.tvTag);
