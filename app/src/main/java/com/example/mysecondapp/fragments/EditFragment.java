@@ -62,7 +62,6 @@ public class EditFragment extends Fragment {
         String content = etContent.getText().toString().trim();
         // 后端交互
         // 板块的信息可以设类变量 从上面的onItemSelected()里拿
-        // 成功发帖后跳转到对应板块界面？还是停留在当然界面+加入自己的收藏帖子（这种情况需要和后端商量）？
 
         Map<String, String> query = new HashMap<>();
         query.put("username", UserInfo.userID);
