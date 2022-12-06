@@ -60,7 +60,7 @@
           <el-form-item label="性别">
             <el-select v-model="form.gender" placeholder="选择您的性别">
               <el-option label="男" value="male" />
-              <el-option label="女" value="famale" />
+              <el-option label="女" value="female" />
             </el-select>
           </el-form-item>
           <el-form-item
@@ -174,9 +174,11 @@ function submitChanges() {
     alert("您未输入用户名，请输入用户名后再试一次");
     return;
   }
-  if (typeof form.age != "number") {
-    alert("您输入的年龄不是整数，请重新输入");
-    return;
+  if (form.age) {
+    if (typeof form.age != "number") {
+      alert("您输入的年龄不是整数，请重新输入");
+      return;
+    }
   }
   console.log(form.age);
   console.log(form.gender);

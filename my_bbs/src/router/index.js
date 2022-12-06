@@ -35,6 +35,15 @@ const routes = [
     ]
   },
   {
+    path:'/newpost',
+    name:'newpost',
+    //其他子页面推荐使用异步加载方式，及未显示就不加载
+    component: () => import('../views/NewPost.vue'),
+    children:[
+      
+    ]
+  },
+  {
     path:'/userinfo',
     name:'userinfo',
     //其他子页面推荐使用异步加载方式，及未显示就不加载
