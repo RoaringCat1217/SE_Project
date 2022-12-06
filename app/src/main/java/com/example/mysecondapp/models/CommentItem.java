@@ -12,7 +12,7 @@ public class CommentItem {
     private String repliedName;
     private String repliedContent;
     private int replyTotal;
-    private List<ReplyDetailBean> replyList;
+    //private List<ReplyDetailBean> replyList;
 
     public CommentItem(int replyID, String replyName, String content, String repliedContent, String repliedName, String time) {
         this.replyID = replyID;
@@ -39,10 +39,10 @@ public class CommentItem {
         return replyTime;
     }
 
-    public void setReplyList(List<ReplyDetailBean> replyList) {
-        this.replyList = replyList;
-    }
-    public List<ReplyDetailBean> getReplyList() {
-        return replyList;
-    }
+//    public void setReplyList(List<ReplyDetailBean> replyList) {
+//        this.replyList = replyList;
+//    }
+//    public List<ReplyDetailBean> getReplyList() {
+//        return replyList;
+//    }
 }

@@ -184,9 +184,9 @@ public class PostDisplayActivity extends AppCompatActivity {
         expandableListView.setGroupIndicator(null);
         adapter = new CommentExpandAdapter(this, commentItemList);
         expandableListView.setAdapter(adapter);
-        for (int i = 0; i < commentItemList.size(); i++) {
-            expandableListView.expandGroup(i);
-        }
+//        for (int i = 0; i < commentItemList.size(); i++) {
+//            expandableListView.expandGroup(i);
+//        }
         // 点击某条评论：弹出输入框 发送后更新
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
