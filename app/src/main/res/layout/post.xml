@@ -120,12 +120,10 @@
 
         </LinearLayout>
 
-        <ExpandableListView
+        <com.example.mysecondapp.models.NonScrollExpandableListView
             android:id="@+id/comment_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="none"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/comment_button"

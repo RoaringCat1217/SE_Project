@@ -48,15 +48,18 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
     // 展示所有评论
     @Override
     public View getGroupView(final int groupPosition, boolean isExpand, View convertView, ViewGroup viewGroup) {
-        final GroupHolder groupHolder;
-
-        if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.comment_item, viewGroup, false);
-            groupHolder = new GroupHolder(convertView);
-            convertView.setTag(groupHolder);
-        }else {
-            groupHolder = (GroupHolder) convertView.getTag();
-        }
+//        final GroupHolder groupHolder;
+//
+//        if(convertView == null){
+//            convertView = LayoutInflater.from(context).inflate(R.layout.comment_item, viewGroup, false);
+//            groupHolder = new GroupHolder(convertView);
+//            convertView.setTag(groupHolder);
+//        }else {
+//            groupHolder = (GroupHolder) convertView.getTag();
+//        }
+        convertView = LayoutInflater.from(context).inflate(R.layout.comment_item, viewGroup, false);
+        GroupHolder groupHolder = new GroupHolder(convertView);
+        convertView.setTag(groupHolder);
         // 显示头像
         groupHolder.replyName.setText(commentItemList.get(groupPosition).getReplyName());
         groupHolder.replyTime.setText(commentItemList.get(groupPosition).getReplyTime());
@@ -130,17 +133,13 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        if(commentItemList.get(i).getReplyList() == null){
-            return 0;
-        }else {
-            return commentItemList.get(i).getReplyList().size()>0 ? commentItemList.get(i).getReplyList().size():0;
-        }
-
+        return 0;
     }
 
     @Override
     public Object getChild(int i, int i1) {
-        return commentItemList.get(i).getReplyList().get(i1);
+        return null;
+        //return commentItemList.get(i).getReplyList().get(i1);
     }
 
     @Override
@@ -162,14 +161,13 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
     }
 
     private void addReplyList(List<ReplyDetailBean> replyBeanList, int groupPosition){
-        if(commentItemList.get(groupPosition).getReplyList() != null ){
-            commentItemList.get(groupPosition).getReplyList().clear();
-            commentItemList.get(groupPosition).getReplyList().addAll(replyBeanList);
-        }else {
-            commentItemList.get(groupPosition).setReplyList(replyBeanList);
-        }
-
-        notifyDataSetChanged();
+//        if(commentItemList.get(groupPosition).getReplyList() != null ){
+//            commentItemList.get(groupPosition).getReplyList().clear();
+//            commentItemList.get(groupPosition).getReplyList().addAll(replyBeanList);
+//        }else {
+//            commentItemList.get(groupPosition).setReplyList(replyBeanList);
+//        }
+//
+//        notifyDataSetChanged();
     }
-
 }
