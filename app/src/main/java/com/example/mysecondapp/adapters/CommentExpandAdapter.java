@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.mysecondapp.R;
 import com.example.mysecondapp.models.CommentItem;
-import com.example.mysecondapp.beans.ReplyDetailBean;
 
 import java.util.List;
 
@@ -160,14 +159,4 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         }
     }
 
-    private void addReplyList(List<ReplyDetailBean> replyBeanList, int groupPosition){
-//        if(commentItemList.get(groupPosition).getReplyList() != null ){
-//            commentItemList.get(groupPosition).getReplyList().clear();
-//            commentItemList.get(groupPosition).getReplyList().addAll(replyBeanList);
-//        }else {
-//            commentItemList.get(groupPosition).setReplyList(replyBeanList);
-//        }
-//
-//        notifyDataSetChanged();
-    }
 }
