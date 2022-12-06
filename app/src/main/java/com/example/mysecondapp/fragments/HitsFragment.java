@@ -5,14 +5,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.activities.LoginActivity;
+import com.example.mysecondapp.utils.BackendUtils;
 import com.example.mysecondapp.models.EntryPost;
-import com.example.mysecondapp.adapters.PostAdapter;
+import com.example.mysecondapp.adapters.PostListAdapter;
 import com.example.mysecondapp.R;
 
 import org.json.JSONArray;
@@ -26,7 +28,7 @@ import java.util.List;
 public class HitsFragment extends Fragment {
     private RecyclerView rv;
     private List<EntryPost> hotListData;
-    private PostAdapter hotListAdapter;
+    private PostListAdapter hotListAdapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -34,7 +36,7 @@ public class HitsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hits_favorite_group, container, false);
 
         rv = (RecyclerView) view.findViewById(R.id.rv_list);
-        hotListAdapter = new PostAdapter(getActivity());
+        hotListAdapter = new PostListAdapter(getActivity());
         rv.setAdapter(hotListAdapter);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -52,16 +54,21 @@ public class HitsFragment extends Fragment {
     private void fetchHotListCallback(JSONObject json) {
         hotListData.clear();
         try {
-            JSONArray arr = json.getJSONArray("entry");
-            int length = arr.length();
-            for (int i = 0; i < length; i++) {
-                JSONObject entry = arr.getJSONObject(i);
-                String group = entry.getString("group_info");
-                String title = entry.getString("title");
-                int hotIndex = entry.getInt("hot_index");
-                int rank = entry.getInt("rank");
-                int id = entry.getInt("id");
-                hotListData.add(new EntryPost(rank, id, title, hotIndex, group, "测试内容"));
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                JSONArray arr = json.getJSONArray("entry");
+                int length = arr.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject entry = arr.getJSONObject(i);
+                    String group = entry.getString("group_name");
+                    String title = entry.getString("title");
+                    String content = entry.getString("content");
+                    int hotIndex = entry.getInt("hot_index");
+                    int postID = entry.getInt("post_id");
+                    hotListData.add(new EntryPost(postID, title, hotIndex, group, content));
+                }
+            } else {
+                Toast.makeText(getActivity(), "获取热榜失败! 请刷新再试.", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();

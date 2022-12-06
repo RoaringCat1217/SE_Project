@@ -18,21 +18,25 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.models.EntryPost;
+import com.example.mysecondapp.utils.BackendUtils;
 import com.example.mysecondapp.models.CommentItem;
 import com.example.mysecondapp.adapters.CommentExpandAdapter;
-import com.example.mysecondapp.models.Constants;
+import com.example.mysecondapp.utils.Constants;
 import com.example.mysecondapp.models.Post;
 import com.example.mysecondapp.R;
-import com.example.mysecondapp.UserInfo;
+import com.example.mysecondapp.utils.UserInfo;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -46,58 +50,79 @@ public class PostDisplayActivity extends AppCompatActivity {
     TextView tvPosterID;
     TextView tvTitle;
     TextView tvContent;
+    TextView tvTime;
     TextView tvLikes;
     CircleImageView userAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: 后端返回是否收藏的信息
         postID = getIntent().getIntExtra(Constants.POST_ID, -1);
 
         setContentView(R.layout.post);
         tvPosterID = findViewById(R.id.usr_id);
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
+        tvTime = findViewById(R.id.tv_time);
         tvLikes = findViewById(R.id.like_number);
         likeIcon = findViewById(R.id.like_icon);
         starIcon = findViewById(R.id.star_icon);
         userAvatar = findViewById(R.id.usr_portrait);
 
-        // 输出用户和帖子
-        // ...
         likeIcon.setImageResource(R.drawable.thumbs_up_unselected); // 如果这个用户没点过赞
-        // TODO: 点赞的返回数量没有, 加一个likes域
-        likeIcon.setOnClickListener(v -> {
-            like();
-        });
+        likeIcon.setOnClickListener(v -> like());
 
-        // TODO: 收藏逻辑
         starIcon.setImageResource(R.drawable.star_unselected); // 如果这个用户没收藏
-        // 如果这个用户收藏了：starIcon.setImageResource(R.drawable.star_selected);
-        // 输出收藏数
-        // ...
-        starIcon.setOnClickListener(new View.OnClickListener() {
-            private boolean star = false; // 这个用户收藏还是没收藏
-            @Override
-            public void onClick(View v) {
-                // 先告诉后端，成功了再继续
-                if (!star) {
-                    starIcon.setImageResource(R.drawable.star_selected);
-                    star = true;
-                    // 更改收藏数
-                } else {
-                    starIcon.setImageResource(R.drawable.star_unselected);
-                    star = false;
-                    // 更改收藏数
-                }
-            }
-        });
+        starIcon.setOnClickListener(v -> star());
+
         fetchPost(postID);
 
         // 初始化评论界面
         initView();
     }
+
+    private void fetchPost(int postID) {
+        Map<String, String> query = new HashMap<>();
+        query.put("username", UserInfo.userID);
+        query.put("post_id", Integer.valueOf(postID).toString());
+        BackendUtils.get(this, "getpost", query, this::fetchPostCallback);
+    }
+
+    private void fetchPostCallback(JSONObject json) {
+        try {
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                String posterID = json.getString("poster_name");
+                String title = json.getString("title");
+                String content = json.getString("content");
+                int likes = json.getInt("likes");
+                boolean isLiked = json.getInt("liked") == 1;
+                boolean isStared = json.getInt("stared") == 1;
+                String time = json.getString("time");
+
+                post = new Post(postID, posterID, title, content, likes, isLiked, isStared, time);
+                tvPosterID.setText(posterID);
+                tvTitle.setText(title);
+                tvContent.setText(content);
+                tvTime.setText(time);
+                tvLikes.setText(Integer.valueOf(likes).toString());
+                if (post.isLiked())
+                    likeIcon.setImageResource(R.drawable.thumbs_up_selected);
+                else
+                    likeIcon.setImageResource(R.drawable.thumbs_up_unselected);
+                if (post.isStared())
+                    starIcon.setImageResource(R.drawable.star_selected);
+                else
+                    starIcon.setImageResource(R.drawable.star_unselected);
+                downloadAvatar(posterID);
+            }
+            else
+                Toast.makeText(this, "访问的帖子不存在!", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private static final String TAG = "MainActivity";
     private TextView comment_button;
@@ -117,49 +142,65 @@ public class PostDisplayActivity extends AppCompatActivity {
         });
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         // 显示评论列表
-        commentItemList = fetchData();
-        initExpandableListView(commentItemList);
+        fetchComment();
+    }
+
+    // 去后端拿评论数据
+    private void fetchComment() {
+        Map<String, String> query = new HashMap<>();
+        query.put("post_id", Integer.valueOf(postID).toString());
+        BackendUtils.get(this, "getreply", query, this::fetchCommentCallback);
+    }
+
+    private void fetchCommentCallback(JSONObject json) {
+        try {
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                commentItemList = new ArrayList<>();
+                JSONArray arr = json.getJSONArray("entry");
+                int length = arr.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject entry = arr.getJSONObject(i);
+                    int replyID = entry.getInt("reply_id");
+                    String replyName = entry.getString("replyer_name");
+                    String content = entry.getString("content");
+                    String repliedContent = entry.getString("replied_content");
+                    String repliedName = entry.getString("replied_name");
+                    String time = entry.getString("reply_time");
+                    commentItemList.add(new CommentItem(replyID, replyName, content, repliedContent, repliedName, time));
+                }
+                initExpandableListView();
+            }
+            else
+                Toast.makeText(this, "获取评论出错!", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // 初始化评论列表
-    private void initExpandableListView(final List<CommentItem> commentList) {
+    // TODO: 还是只能显示demo用的一条评论
+    private void initExpandableListView() {
         expandableListView.setGroupIndicator(null);
-        adapter = new CommentExpandAdapter(this, commentList);
+        adapter = new CommentExpandAdapter(this, commentItemList);
         expandableListView.setAdapter(adapter);
-        for (int i = 0; i < commentList.size(); i++) {
+        for (int i = 0; i < commentItemList.size(); i++) {
             expandableListView.expandGroup(i);
         }
         // 点击某条评论：弹出输入框 发送后更新
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
-                // 全部线性展开，没有分组展开了
-                // boolean isExpanded = expandableListView.isGroupExpanded(groupPosition);
-                Log.e(TAG, "onGroupClick: 当前的评论id>>>" + commentList.get(groupPosition).getId());
-//                if(isExpanded){
-//                    expandableListView.collapseGroup(groupPosition);
-//                }else {
-//                    expandableListView.expandGroup(groupPosition, true);
-//                }
+
+                Log.e(TAG, "onGroupClick: 当前的评论id>>>" + commentItemList.get(groupPosition).getId());
+
                 showReplyDialog(groupPosition);
                 return true;
             }
         });
     }
 
-    // 去后端拿评论数据
-    private List<CommentItem> fetchData(){
-        List<CommentItem> commentList = testData();
-        return commentList;
-    }
-    private List<CommentItem> testData(){
-        List<CommentItem> commentList = new ArrayList();
-        commentList.add(new CommentItem("甲", "沙发", "刚刚"));
-        commentList.add(new CommentItem("乙", "楼上牛逼", "刚刚"));
-        return commentList;
-    }
-
-    // 弹出评论框：comment_box
+    // 弹出评论框, 评论整个帖子
     private void showCommentDialog(){
         dialog = new BottomSheetDialog(this);
         View commentView = LayoutInflater.from(this).inflate(R.layout.comment_box,null);
@@ -167,28 +208,34 @@ public class PostDisplayActivity extends AppCompatActivity {
         Button commentSend = (Button) commentView.findViewById(R.id.comment_send);
         dialog.setContentView(commentView);
 
-        commentSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String commentContent = commentText.getText().toString().trim();
-                if(!TextUtils.isEmpty(commentContent)){
-                    dialog.dismiss();
-                    // TODO:
-                    // 直接在这个类里拿到tvTitle tvContent...
-                    // 发给后端
-                    // 后端回复以后展示commentItem
-                    CommentItem commentItem = new CommentItem("小明", commentContent,"刚刚");
-                    adapter.addCommentData(commentItem);
-                }else {
-                    Toast.makeText(PostDisplayActivity.this,"评论内容不能为空",Toast.LENGTH_SHORT).show();
-                }
+        commentSend.setOnClickListener(view -> {
+            String commentContent = commentText.getText().toString().trim();
+            if(!TextUtils.isEmpty(commentContent)){
+                dialog.dismiss();
+                Map<String, String> query = new HashMap<>();
+                query.put("post_id", Integer.valueOf(postID).toString());
+                query.put("username", UserInfo.userID);
+                query.put("content", commentContent);
+                BackendUtils.get(PostDisplayActivity.this, "newcomment", query, (BackendUtils.BackendCallback) json -> {
+                    try {
+                        long retCode = json.getLong("code");
+                        if (retCode == 1) {
+                            int replyID = json.getInt("post_id");
+                            CommentItem commentItem = new CommentItem(replyID, "小明", commentContent, "小花", "帖子", "刚刚");
+                            adapter.addCommentData(commentItem);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                Toast.makeText(PostDisplayActivity.this,"评论内容不能为空",Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
     }
 
-    // 弹出回复框：comment_box
-    // 和showCommentDialog差不多
+    // 弹出回复框, 评论某个评论
     private void showReplyDialog(final int position){
         dialog = new BottomSheetDialog(this);
         View commentView = LayoutInflater.from(this).inflate(R.layout.comment_box,null);
@@ -197,21 +244,28 @@ public class PostDisplayActivity extends AppCompatActivity {
         commentText.setHint("回复 " + commentItemList.get(position).getReplyName() + " 的评论:");
         dialog.setContentView(commentView);
 
-        commentSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String commentContent = commentText.getText().toString().trim();
-                if(!TextUtils.isEmpty(commentContent)){
-                    dialog.dismiss();
-                    // TODO:
-                    // 通过position拿到被回复者的post_id、名字、内容等: commentItemList.get(position).get...()
-                    // 发给后端
-                    // 后端回复以后展示commentItem
-                    CommentItem commentItem = new CommentItem("嘿嘿", commentContent,"刚刚");
-                    adapter.addCommentData(commentItem);
-                }else {
-                    Toast.makeText(PostDisplayActivity.this,"回复内容不能为空",Toast.LENGTH_SHORT).show();
-                }
+        commentSend.setOnClickListener(view -> {
+            String commentContent = commentText.getText().toString().trim();
+            if(!TextUtils.isEmpty(commentContent)){
+                dialog.dismiss();
+                Map<String, String> query = new HashMap<>();
+                query.put("post_id", Integer.valueOf(commentItemList.get(position).getId()).toString());
+                query.put("username", UserInfo.userID);
+                query.put("content", commentContent);
+                BackendUtils.get(PostDisplayActivity.this, "newcomment", query, (BackendUtils.BackendCallback) json -> {
+                    try {
+                        long retCode = json.getLong("code");
+                        if (retCode == 1) {
+                            int replyID = json.getInt("post_id");
+                            CommentItem commentItem = new CommentItem(replyID, "小明", commentContent, "小花", "帖子", "刚刚");
+                            adapter.addCommentData(commentItem);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                Toast.makeText(PostDisplayActivity.this,"回复内容不能为空",Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
@@ -231,11 +285,12 @@ public class PostDisplayActivity extends AppCompatActivity {
         Map<String, String> query = new HashMap<>();
         query.put("username", UserInfo.userID);
         query.put("post_id", Integer.valueOf(postID).toString());
-        query.put("like", Integer.valueOf(1).toString());
         BackendUtils.get(this, "like", query, this::likeCallback);
     }
 
     private void likeCallback(JSONObject json) {
+        if (post == null)
+            return;
         try {
             long retCode = json.getLong("code");
             if (retCode == 1) {
@@ -244,43 +299,38 @@ public class PostDisplayActivity extends AppCompatActivity {
                     likeIcon.setImageResource(R.drawable.thumbs_up_selected);
                 else
                     likeIcon.setImageResource(R.drawable.thumbs_up_unselected);
+                int likes = json.getInt("likes");
+                post.setLikes(likes);
                 tvLikes.setText(Integer.valueOf(post.getLikes()).toString());
+            } else {
+                Toast.makeText(this, "点赞失败, 请重试!", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void fetchPost(int postID) {
+    private void star() {
         Map<String, String> query = new HashMap<>();
-        query.put("user_name", UserInfo.userID);
+        query.put("username", UserInfo.userID);
         query.put("post_id", Integer.valueOf(postID).toString());
-        BackendUtils.get(this, "getpost", query, this::fetchPostCallback);
+        BackendUtils.get(this, "star", query, this::starCallback);
     }
 
-    private void fetchPostCallback(JSONObject json) {
+    private void starCallback(JSONObject json) {
+        if (post == null)
+            return;
         try {
             long retCode = json.getLong("code");
             if (retCode == 1) {
-                String posterID = json.getString("poster");
-                String title = json.getString("title");
-                String content = json.getString("content");
-                int likes = json.getInt("likes");
-                boolean isLiked = json.getInt("liked") == 1;
-                boolean isStared = json.getInt("stared") == 1;
-                post = new Post(postID, posterID, title, content, likes, isLiked, isStared);
-                tvPosterID.setText(posterID);
-                tvTitle.setText(title);
-                tvContent.setText(content);
-                tvLikes.setText(Integer.valueOf(likes).toString());
-                if (post.isLiked())
-                    likeIcon.setImageResource(R.drawable.thumbs_up_selected);
+                post.toggleStared();
+                if (post.isStared())
+                    starIcon.setImageResource(R.drawable.star_selected);
                 else
-                    likeIcon.setImageResource(R.drawable.thumbs_up_unselected);
-                downloadAvatar(posterID);
+                    starIcon.setImageResource(R.drawable.star_unselected);
+            } else {
+                Toast.makeText(this, "收藏失败, 请重试!", Toast.LENGTH_SHORT).show();
             }
-            else
-                Toast.makeText(this, "出错!", Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -289,7 +339,7 @@ public class PostDisplayActivity extends AppCompatActivity {
     private void downloadAvatar(String posterID) {
         Map<String, String> query = new HashMap<>();
         query.put("user_name", posterID);
-        BackendUtils.get(this, "getavater", query, this::downloadAvatarCallback);
+        BackendUtils.get(this, "getavatar", query, this::downloadAvatarCallback);
     }
 
     private void downloadAvatarCallback(JSONObject json) {
@@ -297,9 +347,11 @@ public class PostDisplayActivity extends AppCompatActivity {
             long retCode = json.getLong("code");
             if (retCode == 1) {
                 String imgStr = json.getString("image");
-                byte[] bitmapArray = Base64.decode(imgStr.split(",")[1], Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
-                userAvatar.setImageBitmap(bitmap);
+                if (imgStr.length() != 0) {
+                    byte[] bitmapArray = Base64.decode(imgStr.split(",")[1], Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+                    userAvatar.setImageBitmap(bitmap);
+                }
             }
             else
                 Toast.makeText(this, "出错!", Toast.LENGTH_SHORT).show();

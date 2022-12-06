@@ -2,7 +2,6 @@ package com.example.mysecondapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,12 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.mysecondapp.BackendUtils;
-import com.example.mysecondapp.LoginUtils;
+import com.example.mysecondapp.utils.BackendUtils;
+import com.example.mysecondapp.utils.LoginUtils;
 import com.example.mysecondapp.R;
-import com.example.mysecondapp.UserInfo;
-import com.example.mysecondapp.activities.LoginActivity;
+import com.example.mysecondapp.utils.UserInfo;
 import com.example.mysecondapp.activities.PostDisplayActivity;
-import com.example.mysecondapp.models.Constants;
+import com.example.mysecondapp.utils.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;

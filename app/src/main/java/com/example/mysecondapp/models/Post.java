@@ -8,8 +8,9 @@ public class Post {
     private int likes;
     private boolean liked;
     private boolean stared;
+    private String time;
 
-    public Post(int postID, String posterID, String title, String content, int likes, boolean liked, boolean stared) {
+    public Post(int postID, String posterID, String title, String content, int likes, boolean liked, boolean stared, String time) {
         this.postID = postID;
         this.posterID = posterID;
         this.title = title;
@@ -17,6 +18,7 @@ public class Post {
         this.likes = likes;
         this.liked = liked;
         this.stared = stared;
+        this.time = time;
     }
 
     public boolean isLiked() {
@@ -25,10 +27,6 @@ public class Post {
 
     public void toggleLiked() {
         this.liked = !this.liked;
-        if (this.liked)
-            this.likes += 1;
-        else
-            this.likes -= 1;
     }
 
     public void setLikes(int likes) {
@@ -43,6 +41,7 @@ public class Post {
         return stared;
     }
 
-
-
+    public void toggleStared() {
+        this.stared = !this.stared;
+    }
 }

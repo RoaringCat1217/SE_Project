@@ -10,10 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.utils.BackendUtils;
 import com.example.mysecondapp.models.EntryPost;
-import com.example.mysecondapp.adapters.PostAdapter;
+import com.example.mysecondapp.adapters.PostListAdapter;
 import com.example.mysecondapp.R;
+import com.example.mysecondapp.utils.UserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,13 +22,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-// 这个和HitsFragment一模一样
 public class FavoriteFragment extends Fragment {
     private RecyclerView rv;
     private List<EntryPost> postData;
-    private PostAdapter postAdapter;
+    private PostListAdapter postListAdapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -35,40 +37,43 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hits_favorite_group, container, false);
 
         rv = (RecyclerView) view.findViewById(R.id.rv_list);
-        postAdapter = new PostAdapter(getActivity());
-        rv.setAdapter(postAdapter);
+        postListAdapter = new PostListAdapter(getActivity());
+        rv.setAdapter(postListAdapter);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         postData = new ArrayList<>();
-        postAdapter.setPostList(postData);
+        postListAdapter.setPostList(postData);
         fetchFavoriteList();
         return view;
     }
 
     private void fetchFavoriteList() {
-        BackendUtils.get(getActivity(), "hot", null, this::fetchFavoriteListCallback);
+        Map<String, String> query = new HashMap<>();
+        query.put("username", UserInfo.userID);
+        BackendUtils.get(getActivity(), "getstars", query, this::fetchFavoriteListCallback);
     }
 
     private void fetchFavoriteListCallback(JSONObject json) {
         postData.clear();
         try {
-            JSONArray arr = json.getJSONArray("entry");
-            int length = arr.length();
-            for (int i = 0; i < length; i++) {
-                JSONObject entry = arr.getJSONObject(i);
-                String group = entry.getString("group_info");
-                String title = entry.getString("title");
-                int hotIndex = entry.getInt("hot_index");
-                int rank = entry.getInt("rank");
-                // TODO:
-                //  backend needs to return favorite list
-                int id = entry.getInt("id");
-                postData.add(new EntryPost(rank, id, title, hotIndex, group, "测试内容"));
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                JSONArray arr = json.getJSONArray("entry");
+                int length = arr.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject entry = arr.getJSONObject(i);
+                    String group = entry.getString("group_name");
+                    String title = entry.getString("title");
+                    String content = entry.getString("content");
+                    int hotIndex = length - entry.getInt("rank");
+                    int postID = entry.getInt("post_id");
+                    postData.add(new EntryPost(postID, title, hotIndex, group, content));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Collections.sort(postData);
-        postAdapter.setPostList(postData);
+        postListAdapter.setPostList(postData);
     }
 }

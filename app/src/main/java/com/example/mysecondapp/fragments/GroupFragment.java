@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,108 +16,61 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mysecondapp.adapters.GroupAdapter;
 import com.example.mysecondapp.models.EntryGroup;
 import com.example.mysecondapp.R;
+import com.example.mysecondapp.models.EntryPost;
+import com.example.mysecondapp.utils.BackendUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GroupFragment extends Fragment {
-    private RecyclerView recyclerView;
+    List<EntryGroup> groupList = new ArrayList<>();
+    GroupAdapter groupAdapter;
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hits_favorite_group,container,false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.rv_list);
-        List<EntryGroup> groupList = new ArrayList<>();
-        groupList.add(new EntryGroup("跳蚤市场"));
-        groupList.add(new EntryGroup("美食天地"));
-        groupList.add(new EntryGroup("资料共享"));
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_list);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
 
-        // 这里和热榜不一样，不另起一个文件专门写Adapter是因为板块逻辑简单一些
-        GroupAdapter groupAdapter = new GroupAdapter(groupList);
+        groupAdapter = new GroupAdapter(getActivity());
         recyclerView.setAdapter(groupAdapter);
-
-        // 设置监听事件：跳转到板块对应的帖子列表，在GroupActivity里面
-
-//        groupAdapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                // 跳到对应板块的帖子列表：GroupActivity
-//                Toast.makeText(getContext(), "这是条目" + recyclerView.getBaseline(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-
-        groupAdapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Bundle bundle = new Bundle();
-                try {
-                    Intent intent = new Intent(view.getContext(), GroupListFragment.class);
-                    intent.putExtras(bundle);
-                    view.getContext().startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        fetchGroupList();
 
         return view;
     }
 
-    static class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder>{
-        private List<EntryGroup> groupList;
-        Context context;
-        OnItemClickListener onItemClickListener;
+    private void fetchGroupList() {
+        BackendUtils.get(getActivity(), "catalogue", null, this::fetchGroupListCallback);
+    }
 
-        public interface OnItemClickListener{
-            void onItemClick(View view, int position);
-        }
-
-        public void setOnItemClickListener(OnItemClickListener onItemClickListener){
-            this.onItemClickListener = onItemClickListener;
-        }
-
-        public GroupAdapter(List<EntryGroup> groupList){
-            this.groupList = groupList;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_group,viewGroup,false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-            EntryGroup entry = groupList.get(position);
-            //绑定数据
-            holder.tvName.setText(entry.getName());
-
-            //添加监听
-            if (onItemClickListener != null) {
-                holder.cv.setOnClickListener(view -> onItemClickListener.onItemClick(view, position));
+    private void fetchGroupListCallback(JSONObject json) {
+        groupList.clear();
+        try {
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                JSONArray arr = json.getJSONArray("groups");
+                int length = arr.length();
+                for (int i = 0; i < length; i++) {
+                    String group = arr.getString(i);
+                    groupList.add(new EntryGroup(group));
+                }
+            } else {
+                Toast.makeText(getActivity(), "获取小组失败! 请刷新再试.", Toast.LENGTH_SHORT).show();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        @Override
-        public int getItemCount() {
-            return groupList.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView tvName;
-            private CardView cv;
-            public ViewHolder(View v) {
-                super(v);
-                tvName = (TextView) v.findViewById(R.id.tv_name);
-                cv = (CardView) v.findViewById(R.id.cv_all);
-            }
-        }
+        groupAdapter.setGroupList(groupList);
     }
 }
