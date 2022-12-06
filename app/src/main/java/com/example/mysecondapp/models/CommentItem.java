@@ -5,8 +5,7 @@ import com.example.mysecondapp.beans.ReplyDetailBean;
 import java.util.List;
 
 public class CommentItem {
-    private int id;
-    private String replyPortrait;
+    private int replyID;
     private String replyName;
     private String replyTime;
     private String replyContent;
@@ -15,36 +14,27 @@ public class CommentItem {
     private int replyTotal;
     private List<ReplyDetailBean> replyList;
 
-    public CommentItem(String name, String content, String time) {
-        this.replyName = name;
+    public CommentItem(int replyID, String replyName, String content, String repliedContent, String repliedName, String time) {
+        this.replyID = replyID;
+        this.replyName = replyName;
         this.replyContent = content;
+        this.repliedContent = repliedContent;
+        this.repliedName = repliedName;
         this.replyTime = time;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
     public int getId() {
-        return id;
+        return this.replyID;
     }
 
-    public void setReplyName(String name) {
-        this.replyName = name;
-    }
     public String getReplyName() {
         return replyName;
     }
 
-    public void setReplyContent(String content) {
-        this.replyContent = content;
-    }
     public String getReplyContent() {
         return replyContent;
     }
 
-    public void setReplyTime(String time) {
-        this.replyTime = time;
-    }
     public String getReplyTime() {
         return replyTime;
     }

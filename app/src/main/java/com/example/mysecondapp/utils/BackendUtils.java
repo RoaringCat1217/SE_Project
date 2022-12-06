@@ -1,4 +1,4 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
 
@@ -17,7 +18,9 @@ public class BackendUtils {
     public interface BackendCallback {
         void run(JSONObject json);
     }
-    private static final OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
+            .build();
     private static final String baseURL = "http://47.93.251.137:3000/";
 
     public static void get(Activity activity, String path, Map<String, String> query, BackendCallback callback) {
@@ -27,7 +30,10 @@ public class BackendUtils {
                 urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
         }
         String url = urlBuilder.build().toString();
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Connection", "close")
+                .build();
         client.newCall(request).enqueue(new Callback() {
 
             @Override

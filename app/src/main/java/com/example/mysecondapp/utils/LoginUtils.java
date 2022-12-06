@@ -1,4 +1,4 @@
-package com.example.mysecondapp;
+package com.example.mysecondapp.utils;
 
 import android.content.Context;
 import android.content.Intent;

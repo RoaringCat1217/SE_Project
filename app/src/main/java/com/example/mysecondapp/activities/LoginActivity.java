@@ -5,13 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.mysecondapp.BackendUtils;
-import com.example.mysecondapp.LoginUtils;
+import com.example.mysecondapp.utils.BackendUtils;
+import com.example.mysecondapp.utils.LoginUtils;
 import com.example.mysecondapp.R;
-import com.example.mysecondapp.UserInfo;
+import com.example.mysecondapp.utils.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,10 +30,10 @@ public class LoginActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
         etUserID = findViewById(R.id.etUserID);
         etUserPwd = findViewById(R.id.etUserPwd);
-        /*if(etUserID.getAutofillHints()[0] != ""){
-            etUserID.setText(etUserID.getAutofillHints()[0]);
-            etUserPwd.setText(etUserPwd.getAutofillHints()[0]);
-        }*/
+        Button btnRegister = findViewById(R.id.btnRegister);
+        btnRegister.setOnClickListener(this::register);
+        Button btnLogin = findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(this::login);
     }
 
     public void login(View view) {
@@ -40,10 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         String pwd = etUserPwd.getText().toString().trim();
         etUserID.setAutofillHints(id);
         etUserPwd.setAutofillHints(pwd);
-        /*else{
-            etUserID.setAutofillHints("");
-            etUserPwd.setAutofillHints("");
-        }*/
         Map<String, String> query = new HashMap<>();
         query.put("username", id);
         query.put("password", pwd);
@@ -64,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void signup(View view) {
+    public void register(View view) {
         String id = etUserID.getText().toString().trim();
         String pwd = etUserPwd.getText().toString().trim();
         Map<String, String> query = new HashMap<>();

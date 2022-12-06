@@ -14,7 +14,9 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.example.mysecondapp.LoginUtils;
+import com.example.mysecondapp.fragments.GroupListFragment;
+import com.example.mysecondapp.utils.Constants;
+import com.example.mysecondapp.utils.LoginUtils;
 import com.example.mysecondapp.fragments.EditFragment;
 import com.example.mysecondapp.fragments.FavoriteFragment;
 import com.example.mysecondapp.fragments.GroupFragment;
@@ -23,14 +25,13 @@ import com.example.mysecondapp.fragments.PersonalFragment;
 import com.example.mysecondapp.R;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener{
-    private RadioGroup rgMain;
-    private RadioButton rbMain;
     private HitsFragment hitsFragment;
     private FavoriteFragment favoriteFragment;
     private EditFragment editFragment;
     private GroupFragment groupFragment;
     private PersonalFragment personalFragment;
     private FragmentManager fragmentManager;
+    private GroupListFragment groupListFragment;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,10 +40,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
-        rgMain = (RadioGroup) findViewById(R.id.rg_tab_bar);
+        RadioGroup rgMain = (RadioGroup) findViewById(R.id.rg_tab_bar);
         rgMain.setOnCheckedChangeListener((RadioGroup.OnCheckedChangeListener) this);
         //获取第一个单选按钮，并设置其为选中状态
-        rbMain = (RadioButton) findViewById(R.id.rb_hits);
+        RadioButton rbMain = (RadioButton) findViewById(R.id.rb_hits);
         rbMain.setChecked(true);
 
         // 回退（不知道能不能成功运行）
@@ -65,6 +66,17 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         });
     }
 
+    public void showGroupList(String group) {
+        FragmentTransaction fTransaction = fragmentManager.beginTransaction();
+        hideAllFragment(fTransaction);
+        groupListFragment = new GroupListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.GROUP_NAME, group);
+        groupListFragment.setArguments(bundle);
+        fTransaction.add(R.id.ly_content, groupListFragment);
+        fTransaction.commit();
+    }
+
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         FragmentTransaction fTransaction = fragmentManager.beginTransaction();
@@ -80,12 +92,15 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             }
             fTransaction.commit();
         } else if (checkedId == R.id.rb_favorite){
-            if (favoriteFragment == null){
-                favoriteFragment = new FavoriteFragment();
-                fTransaction.add(R.id.ly_content,favoriteFragment);
-            } else
-                fTransaction.show(favoriteFragment);
-            fTransaction.commit();
+            // 收藏帖子要求登录
+            LoginUtils.checkLogin(this, () -> {
+                if (favoriteFragment == null){
+                    favoriteFragment = new FavoriteFragment();
+                    fTransaction.add(R.id.ly_content,favoriteFragment);
+                } else
+                    fTransaction.show(favoriteFragment);
+                fTransaction.commit();
+            });
         } else if(checkedId == R.id.rb_edit) {
             // 发帖要求登录
             LoginUtils.checkLogin(this, () -> {
@@ -115,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 fTransaction.commit();
             });
         }
-
     }
 
     //隐藏所有Fragment
@@ -125,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         if(editFragment != null)fragmentTransaction.hide(editFragment);
         if(groupFragment != null)fragmentTransaction.hide(groupFragment);
         if(personalFragment != null)fragmentTransaction.hide(personalFragment);
+        if (groupListFragment != null) fragmentTransaction.hide(groupListFragment);
     }
 
     public void go_back(View view) {

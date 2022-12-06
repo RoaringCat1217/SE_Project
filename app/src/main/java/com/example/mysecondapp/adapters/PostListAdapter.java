@@ -7,32 +7,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mysecondapp.models.Constants;
+import com.example.mysecondapp.utils.Constants;
 import com.example.mysecondapp.models.EntryPost;
-import com.example.mysecondapp.LoginUtils;
+import com.example.mysecondapp.utils.LoginUtils;
 import com.example.mysecondapp.R;
 import com.example.mysecondapp.activities.PostDisplayActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
+public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder>{
 
     private List<EntryPost> postList = new ArrayList<>();
     Context context;
 
-    public PostAdapter(Context context) {
+    public PostListAdapter(Context context) {
         this.context = context;
-    }
-
-    public interface OnItemClickListener{
-        void onItemClick(View view, int position);
     }
 
     @NonNull
@@ -45,16 +40,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         EntryPost entry = postList.get(position);
-        // 浏览帖子没有用户头像和昵称
-        // holder.ivUsrPortrait.setImageResource(entry.getUsrPortrait());
-        // holder.tvUsrID.setText(Integer.valueOf(entry.getPostID()).toString());
         holder.tvTitle.setText(entry.getTitle());
         holder.tvContent.setText(entry.getContent());
-        holder.tvTag.setText(entry.getTag()); // 去掉xml里我写的“鹊桥”
+        holder.tvTag.setText(entry.getTag());
 
-        // 给浏览帖子绑定监听
-        // holder.itemView.setOnClickListener(view -> Toast.makeText(context, "这是帖子" + holder.postToken + "的浏览", Toast.LENGTH_SHORT).show());
         holder.itemView.setOnClickListener(view -> {
+            // 浏览帖子页面前要登录
             LoginUtils.checkLogin(context, ()->{
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constants.POST_ID, entry.getPostID());
@@ -80,16 +71,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // ImageView ivUsrPortrait;
-        // TextView tvUsrID;
         TextView tvTitle;
         TextView tvContent;
-        TextView tvTag; // 去掉点赞按钮以后新加的
+        TextView tvTag;
 
         public ViewHolder(@NonNull View v) {
             super(v);
-            // ivUsrPortrait = v.findViewById(R.id.ivUsrPortrait);
-            // tvUsrID = v.findViewById(R.id.tvUsrID);
             tvTitle = v.findViewById(R.id.tvTitle);
             tvContent = v.findViewById(R.id.tvContent);
             tvTag = v.findViewById(R.id.tvTag);

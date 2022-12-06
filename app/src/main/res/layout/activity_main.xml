@@ -118,11 +118,13 @@
 
 
     <FrameLayout
+        android:id="@+id/ly_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ly_top_bar"
         android:layout_above="@id/div_tab_bar"
-        android:id="@+id/ly_content">
+        android:layout_below="@id/ly_top_bar"
+        android:layout_marginTop="-2dp"
+        android:layout_marginBottom="2dp">
 
     </FrameLayout>
 
