@@ -221,7 +221,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         long retCode = json.getLong("code");
                         if (retCode == 1) {
                             int replyID = json.getInt("post_id");
-                            CommentItem commentItem = new CommentItem(replyID, "小明", commentContent, "小花", "帖子", "刚刚");
+                            CommentItem commentItem = new CommentItem(replyID, UserInfo.userID, commentContent, tvContent.getText().toString(), tvPosterID.getText().toString(), "刚刚");
                             adapter.addCommentData(commentItem);
                         }
                     } catch (JSONException e) {
@@ -248,8 +248,9 @@ public class PostDisplayActivity extends AppCompatActivity {
             String commentContent = commentText.getText().toString().trim();
             if(!TextUtils.isEmpty(commentContent)){
                 dialog.dismiss();
+                CommentItem item = commentItemList.get(position);
                 Map<String, String> query = new HashMap<>();
-                query.put("post_id", Integer.valueOf(commentItemList.get(position).getId()).toString());
+                query.put("post_id", Integer.valueOf(item.getId()).toString());
                 query.put("username", UserInfo.userID);
                 query.put("content", commentContent);
                 BackendUtils.get(PostDisplayActivity.this, "newcomment", query, (BackendUtils.BackendCallback) json -> {
@@ -257,7 +258,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         long retCode = json.getLong("code");
                         if (retCode == 1) {
                             int replyID = json.getInt("post_id");
-                            CommentItem commentItem = new CommentItem(replyID, "小明", commentContent, "小花", "帖子", "刚刚");
+                            CommentItem commentItem = new CommentItem(replyID, UserInfo.userID, commentContent, item.getReplyContent(), item.getReplyName(), "刚刚");
                             adapter.addCommentData(commentItem);
                         }
                     } catch (JSONException e) {
