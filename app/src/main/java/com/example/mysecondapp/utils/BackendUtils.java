@@ -15,11 +15,24 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
 
+class ContentLengthIntercepter implements Interceptor {
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request();
+        Response response = chain.proceed(request);
+        return response.newBuilder()
+                .removeHeader("Content-Length")
+                .addHeader("Transfer-Encoding", "chunked")
+                .build();
+    }
+}
+
 public class BackendUtils {
     public interface BackendCallback {
         void run(JSONObject json);
     }
     private static final OkHttpClient client = new OkHttpClient.Builder()
+            .addInterceptor(new ContentLengthIntercepter())
             .retryOnConnectionFailure(true)
             .build();
     private static final String baseURL = "http://47.93.251.137:3000/";
