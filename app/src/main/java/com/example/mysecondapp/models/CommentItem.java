@@ -1,7 +1,5 @@
 package com.example.mysecondapp.models;
 
-import com.example.mysecondapp.beans.ReplyDetailBean;
-
 import java.util.List;
 
 public class CommentItem {
@@ -39,10 +37,4 @@ public class CommentItem {
         return replyTime;
     }
 
-//    public void setReplyList(List<ReplyDetailBean> replyList) {
-//        this.replyList = replyList;
-//    }
-//    public List<ReplyDetailBean> getReplyList() {
-//        return replyList;
-//    }
 }

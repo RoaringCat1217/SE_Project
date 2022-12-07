@@ -67,7 +67,7 @@ public class EditFragment extends Fragment {
         query.put("username", UserInfo.userID);
         query.put("title", title);
         query.put("content", content);
-        query.put("category", (String) spinner.getSelectedItem());
+        query.put("group_name", (String) spinner.getSelectedItem());
         BackendUtils.get(getActivity(), "newpost", query, this::sendPostCallback);
     }
 

@@ -14,8 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.mysecondapp.fragments.GroupListFragment;
+import com.example.mysecondapp.fragments.SearchFragment;
 import com.example.mysecondapp.utils.Constants;
 import com.example.mysecondapp.utils.LoginUtils;
 import com.example.mysecondapp.fragments.EditFragment;
@@ -25,6 +27,10 @@ import com.example.mysecondapp.fragments.HitsFragment;
 import com.example.mysecondapp.fragments.PersonalFragment;
 import com.example.mysecondapp.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener{
     private HitsFragment hitsFragment;
     private FavoriteFragment favoriteFragment;
@@ -33,12 +39,15 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private PersonalFragment personalFragment;
     private FragmentManager fragmentManager;
     private GroupListFragment groupListFragment;
+    private SearchFragment searchFragment;
+    private EditText etSearch;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        etSearch = findViewById(R.id.search_key);
 
         fragmentManager = getSupportFragmentManager();
         RadioGroup rgMain = (RadioGroup) findViewById(R.id.rg_tab_bar);
@@ -49,18 +58,15 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         // 搜索
         ImageButton searchButton = findViewById(R.id.search_bt);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText searchKey = v.findViewById(R.id.search_key);
-                String key = searchKey.getText().toString().trim();
-                // 发给后端搜索
-                // 跳到SearchFragment（用类似Group->GroupList的逻辑）
-                // ……
-            }
+        searchButton.setOnClickListener(view -> {
+            String query = etSearch.getText().toString().trim();
+            if (query.length() == 0)
+                Toast.makeText(MainActivity.this, "搜索内容不能为空!", Toast.LENGTH_SHORT).show();
+            else
+                showSearchList(query);
         });
 
-        // 回退（不知道能不能成功运行）
+        // 回退
         ImageButton backButton = findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,8 +97,15 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         fTransaction.commit();
     }
 
-    public void showSearchList(String search) {
-
+    public void showSearchList(String query) {
+        FragmentTransaction fTransaction = fragmentManager.beginTransaction();
+        hideAllFragment(fTransaction);
+        searchFragment = new SearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.SEARCH_KEYS, query);
+        searchFragment.setArguments(bundle);
+        fTransaction.add(R.id.ly_content, searchFragment);
+        fTransaction.commit();
     }
 
     @Override
@@ -112,39 +125,26 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         } else if (checkedId == R.id.rb_favorite){
             // 收藏帖子要求登录
             LoginUtils.checkLogin(this, () -> {
-                if (favoriteFragment == null){
-                    favoriteFragment = new FavoriteFragment();
-                    fTransaction.add(R.id.ly_content,favoriteFragment);
-                } else
-                    fTransaction.show(favoriteFragment);
+                favoriteFragment = new FavoriteFragment();
+                fTransaction.add(R.id.ly_content,favoriteFragment);
                 fTransaction.commit();
             });
         } else if(checkedId == R.id.rb_edit) {
             // 发帖要求登录
             LoginUtils.checkLogin(this, () -> {
-                if (editFragment == null) {
-                    editFragment = new EditFragment();
-                    fTransaction.add(R.id.ly_content, editFragment);
-                }
-                else
-                    fTransaction.show(editFragment);
+                editFragment = new EditFragment();
+                fTransaction.add(R.id.ly_content, editFragment);
                 fTransaction.commit();
             });
         } else if (checkedId == R.id.rb_group) {
-            if (groupFragment == null) {
-                groupFragment = new GroupFragment();
-                fTransaction.add(R.id.ly_content,groupFragment);
-            } else
-                fTransaction.show(groupFragment);
+            groupFragment = new GroupFragment();
+            fTransaction.add(R.id.ly_content,groupFragment);
             fTransaction.commit();
         } else if(checkedId == R.id.rb_personal) {
             // 查看个人信息要求登录
             LoginUtils.checkLogin(this, ()->{
-                if (personalFragment == null) {
-                    personalFragment = new PersonalFragment("个人");
-                    fTransaction.add(R.id.ly_content, personalFragment);
-                } else
-                    fTransaction.show(personalFragment);
+                personalFragment = new PersonalFragment("个人");
+                fTransaction.add(R.id.ly_content, personalFragment);
                 fTransaction.commit();
             });
         }
@@ -158,5 +158,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         if(groupFragment != null)fragmentTransaction.hide(groupFragment);
         if(personalFragment != null)fragmentTransaction.hide(personalFragment);
         if (groupListFragment != null) fragmentTransaction.hide(groupListFragment);
+        if (searchFragment != null) fragmentTransaction.hide(searchFragment);
     }
 }
