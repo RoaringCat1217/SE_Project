@@ -1,77 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fadingEdge="horizontal"
-    android:fadingEdgeLength="3dp">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/usr_portrait"
+        android:src="@mipmap/edit_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="21dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/usenameText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/avatar_1"
-        tools:srcCompat="@drawable/avatar_1"
-        tools:visibility="visible" />
+        android:layout_marginTop="80dp"
+        android:layout_gravity="center_horizontal"
+        app:civ_border_color="@color/black"
+        app:civ_border_width="2dp"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/usenameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="usename"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.325" />
+        android:textSize="22sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="usename"/>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
         android:divider="@color/black"
         android:orientation="vertical"
-        android:showDividers="middle|beginning|end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usenameText">
+        android:showDividers="middle|beginning|end">
 
         <LinearLayout
             android:id="@+id/gender_entry"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="horizontal">
-
             <TextView
-                android:id="@+id/true_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="    性别"
                 android:textAlignment="textStart"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="18dp"
+                android:text="性别："/>
 
-            <TextView
-                android:id="@+id/gender_edit"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/rg"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="编辑性别  >  "
-                android:textAlignment="viewEnd"
-                android:textSize="20sp" />
+                android:layout_width="match_parent">
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="男" />
+                <RadioButton
+                    android:id="@+id/femle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="女"/>
+            </RadioGroup>
         </LinearLayout>
 
         <LinearLayout
@@ -85,7 +81,6 @@
                 android:id="@+id/true_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="    电话"
                 android:textAlignment="textStart"
                 android:textSize="20sp" />
@@ -104,6 +99,7 @@
             android:id="@+id/age_entry"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
@@ -125,4 +121,16 @@
                 android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:background="@drawable/round_text_bg"
+        android:id="@+id/save_bt"
+        android:layout_width="85dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="300dp"
+        android:backgroundTint="@color/darktheme"
+        android:text="保存"
+        android:textSize="19sp"
+        android:textColor="@color/lighttheme"/>
+</LinearLayout>

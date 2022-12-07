@@ -179,7 +179,6 @@ public class PostDisplayActivity extends AppCompatActivity {
     }
 
     // 初始化评论列表
-    // TODO: 还是只能显示demo用的一条评论
     private void initExpandableListView() {
         expandableListView.setGroupIndicator(null);
         adapter = new CommentExpandAdapter(this, commentItemList);

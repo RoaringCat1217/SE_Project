@@ -3,27 +3,36 @@ package com.example.mysecondapp.fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IdRes;
 import androidx.fragment.app.Fragment;
 
-import com.example.mysecondapp.BackendUtils;
+import com.example.mysecondapp.activities.PostDisplayActivity;
+import com.example.mysecondapp.models.CommentItem;
+import com.example.mysecondapp.utils.BackendUtils;
 import com.example.mysecondapp.R;
-import com.example.mysecondapp.UserInfo;
+import com.example.mysecondapp.utils.UserInfo;
 import com.example.mysecondapp.activities.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PersonalFragment extends Fragment implements View.OnClickListener {
     private ImageView avatar;
@@ -39,6 +48,10 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
     private LinearLayout phone;
     private LinearLayout age;
 
+    private RadioGroup rg;
+    private Button saveBt;
+    private CircleImageView usrPortrait;
+
     private final String content;
     public PersonalFragment(String content) {
         this.content = content;
@@ -48,6 +61,34 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_personal,container,false);
         user_name = (TextView) view.findViewById(R.id.usenameText);
+
+        rg = (RadioGroup) view.findViewById(R.id.rg);
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                // 性别信息
+                // ……
+                int ifMale = R.id.male;
+
+            }
+        });
+
+        saveBt = (Button) view.findViewById(R.id.save_bt);
+        saveBt.setOnClickListener(view1 -> {
+            // 点击了“保存”按钮
+            // 告诉后端：updateuserinfo
+        });
+
+        usrPortrait = (CircleImageView) view.findViewById(R.id.usr_portrait);
+        usrPortrait.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 上传照片
+                
+            }
+        });
+
+
         avatar = (ImageView) view.findViewById(R.id.imageView2);
         true_gender = (TextView) view.findViewById(R.id.true_gender);
         gender_edit = (TextView) view.findViewById(R.id.gender_edit);
@@ -66,6 +107,11 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
         age.setOnClickListener(this);
         return view;
     }
+
+
+
+
+
 
     public void showInfo(String id){
         user_name.setText(id);
