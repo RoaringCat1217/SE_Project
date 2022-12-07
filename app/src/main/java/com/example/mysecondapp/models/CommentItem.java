@@ -37,4 +37,12 @@ public class CommentItem {
         return replyTime;
     }
 
+    public String getRepliedName() {
+        return repliedName;
+    }
+
+    public String getRepliedContent() {
+        return repliedContent;
+    }
+
 }

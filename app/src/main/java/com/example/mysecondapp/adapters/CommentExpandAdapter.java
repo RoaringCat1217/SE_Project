@@ -1,16 +1,28 @@
 package com.example.mysecondapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mysecondapp.R;
 import com.example.mysecondapp.models.CommentItem;
+import com.example.mysecondapp.utils.BackendUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,10 +71,33 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.comment_item, viewGroup, false);
         GroupHolder groupHolder = new GroupHolder(convertView);
         convertView.setTag(groupHolder);
+        CommentItem item = commentItemList.get(groupPosition);
+        // 显示除了头像外的东西
+        groupHolder.replyName.setText(item.getReplyName());
+        groupHolder.replyTime.setText(item.getReplyTime());
+        groupHolder.replyContent.setText(item.getReplyContent());
+        groupHolder.repliedName.setText(item.getRepliedName());
+        groupHolder.repliedContent.setText(item.getRepliedContent());
+
         // 显示头像
-        groupHolder.replyName.setText(commentItemList.get(groupPosition).getReplyName());
-        groupHolder.replyTime.setText(commentItemList.get(groupPosition).getReplyTime());
-        groupHolder.replyContent.setText(commentItemList.get(groupPosition).getReplyContent());
+        Map<String, String> query = new HashMap<>();
+        query.put("user_name", item.getReplyName());
+        BackendUtils.get((AppCompatActivity) context, "getavatar", query, json -> {
+            try {
+                long retCode = json.getLong("code");
+                if (retCode == 1) {
+                    String imgStr = json.getString("image");
+                    if (imgStr.length() != 0) {
+                        byte[] bitmapArray = Base64.decode(imgStr.split(",")[1], Base64.DEFAULT);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+                        groupHolder.replyPortrait.setImageBitmap(bitmap);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+
 
         return convertView;
     }
@@ -93,40 +128,10 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
     // 以下是嵌套回复相关，都先不管
 
     public void addReplyData(CommentItem replyDetailBean, int groupPosition){
-//        if(replyDetailBean!=null){
-//            Log.e(TAG, "addTheReplyData: >>>>该刷新回复列表了:"+replyDetailBean.toString() );
-//            if(commentBeanList.get(groupPosition).getReplyList() != null ){
-//                commentBeanList.get(groupPosition).getReplyList().add(replyDetailBean);
-//            }else {
-//                List<ReplyDetailBean> replyList = new ArrayList<>();
-//                replyList.add(replyDetailBean);
-//                commentBeanList.get(groupPosition).setReplyList(replyList);
-//            }
-//            notifyDataSetChanged();
-//        }else {
-//            throw new IllegalArgumentException("回复数据为空!");
-//        }
     }
 
     @Override
     public View getChildView(final int groupPosition, int childPosition, boolean b, View convertView, ViewGroup viewGroup) {
-//        final ChildHolder childHolder;
-//        if(convertView == null){
-//            convertView = LayoutInflater.from(context).inflate(R.layout.comment_reply_item_layout,viewGroup, false);
-//            childHolder = new ChildHolder(convertView);
-//            convertView.setTag(childHolder);
-//        }
-//        else {
-//            childHolder = (ChildHolder) convertView.getTag();
-//        }
-//
-//        String replyUser = commentBeanList.get(groupPosition).getReplyList().get(childPosition).getNickName();
-//        if(!TextUtils.isEmpty(replyUser)){
-//            childHolder.tv_name.setText(replyUser + ":");
-//        }
-//
-//        childHolder.tv_content.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getContent());
-
         return convertView;
     }
 
@@ -138,7 +143,6 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int i, int i1) {
         return null;
-        //return commentItemList.get(i).getReplyList().get(i1);
     }
 
     @Override
