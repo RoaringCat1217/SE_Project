@@ -1,8 +1,5 @@
 <template>
   <el-container class="app-wrapper">
-    <el-aside width="200px" class="sidebar-container">
-      <Menu />
-    </el-aside>
     <el-container class="container">
       <el-header height="20%">
         <div class="title">我的个人信息</div>
@@ -26,6 +23,15 @@
           </div>
         </template>
         <el-descriptions title="详细资料" :column="3" border>
+          <el-descriptions-item
+            label="昵称"
+            label-align="right"
+            align="center"
+            label-class-name="my-label"
+            class-name="my-content"
+            width="150px"
+            >{{ nickname }}</el-descriptions-item
+          >
           <el-descriptions-item
             label="性别"
             label-align="right"
@@ -54,8 +60,8 @@
       </el-card>
       <el-dialog v-model="dialogVisible" title="修改个人信息" width="30%">
         <el-form :model="form" label-width="120px">
-          <el-form-item label="用户名" :rules="[{ required: true }]">
-            <el-input v-model="form.name" />
+          <el-form-item label="昵称">
+            <el-input v-model="form.nickname" />
           </el-form-item>
           <el-form-item label="性别">
             <el-select v-model="form.gender" placeholder="选择您的性别">
@@ -98,7 +104,7 @@
               :show-file-list="false"
               :on-change="handleUpload"
             >
-              <img v-if="uploaded_image" :src="uploaded_image" class="avatar" />
+              <img v-if="form.avatar" :src="form.avatar" class="avatar" />
               <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
             </el-upload>
           </el-form-item>
@@ -120,36 +126,37 @@ import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
 const dialogVisible = ref(false);
 const form = reactive({
-  name: "",
+  nickname: "",
   gender: "",
   age: "",
   phone_number: "",
   avatar: "",
 });
 
-let uploaded_image = ref("");
-let group_name = ref([
-  "测试版面",
-  "测试版面",
-  "测试版面",
-  "测试版面",
-  "测试版面",
-  "测试版面",
-]);
-let gender = ref("未知");
-let age = ref("未知");
-let tele = ref("未知");
+let newuserinfo = ref({
+  username: "admintest_www",
+  gender: "-1",
+  age: -1,
+  avatar: "-1",
+  phone_number: "-1",
+  nickname: "o",
+});
+
+let gender = ref("未设置");
+let age = ref("未设置");
+let tele = ref("未设置");
+let nickname = ref("未设置");
 let image_base64 = ref("");
 
 function handleUpload(file, fileList) {
   getBase64(file.raw).then((res) => {
-    if (file.size > 20480) {
-      alert("图片过大，请重新选择图片上传");
+    console.log(file.size);
+    if (file.size > 102400) {
+      alert("图片超过100KB，请重新选择图片上传");
       return;
     }
     const params = res;
     form.avatar = params;
-    uploaded_image.value = params;
   });
 }
 function getBase64(file) {
@@ -180,49 +187,35 @@ function submitChanges() {
       return;
     }
   }
-  console.log(form.age);
-  console.log(form.gender);
-  console.log(typeof form.age);
-
-  let tempgender = "-1";
-  if (form.gender) {
-    tempgender = form.gender;
+  if (form.nickname != "") {
+    newuserinfo.value.nickname = form.nickname;
   }
-  let tempage = -1;
+  if (form.gender != "") {
+    newuserinfo.value.gender = form.gender;
+  }
   if (form.age) {
-    tempage = form.age;
+    newuserinfo.value.age = form.age;
   }
-  let tempphone_number = "-1";
-  if (form.phone_number) {
-    tempphone_number = form.phone_number;
+  if (form.phone_number != "") {
+    newuserinfo.value.phone_number = form.phone_number;
   }
-  let tempavatar = "-1";
-  if (form.avatar) {
-    tempavatar = form.avatar;
+  if (form.avatar != "") {
+    newuserinfo.value.avatar = form.avatar;
   }
-  axios
-    .get("/api/updateuserinfo", {
-      params: {
-        name: form.name,
-        gender: tempgender,
-        age: tempage,
-        phone_number: tempphone_number,
-        avatar: tempavatar,
-      },
-    })
-    .then((res) => {
-      console.log(res.data.code);
-      if (res.data.code == 1) {
-        alert("个人信息更新成功，请刷新查看");
-      }
-    });
+  axios.post("/api/updateuserinfo", newuserinfo.value).then((res) => {
+    console.log(res.data.code);
+    if (res.data.code != 1) {
+      alert("个人信息更新失败");
+    }
+    alert("个人信息更新成功");
+  });
 }
 
 onMounted(() => {
   axios
     .get("/api/getuserinfo", {
       params: {
-        name: "admintest_www",
+        username: "admintest_www",
       },
     })
     .then((res) => {
@@ -234,7 +227,7 @@ onMounted(() => {
       }
       age.value = res.data.age;
       tele.value = res.data.phone_number;
-
+      nickname.value = res.data.nickname;
       let str = res.data.avatar;
       str = str.replace(/\s/g, "+");
       image_base64.value = str;

@@ -68,65 +68,6 @@
               </div>
             </el-card>
           </el-col>
-          <el-col span="12">
-            <el-card :body-style="{ padding: '20px' }" class="content-card">
-              <img
-                src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                class="image"
-              />
-              <div style="padding: 14px">
-                <span>{{ group_name[3] }}</span>
-                <div class="bottom">
-                  <el-button
-                    text
-                    class="button"
-                    @click="enterGroup(group_name[3])"
-                    >进入版面</el-button
-                  >
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-        <el-row gutter="40" class="groupcontent">
-          <el-col span="12">
-            <el-card :body-style="{ padding: '20px' }" class="content-card">
-              <img
-                src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                class="image"
-              />
-              <div style="padding: 14px">
-                <span>{{ group_name[4] }}</span>
-                <div class="bottom">
-                  <el-button
-                    text
-                    class="button"
-                    @click="enterGroup(group_name[4])"
-                    >进入版面</el-button
-                  >
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col span="12">
-            <el-card :body-style="{ padding: '20px' }" class="content-card">
-              <img
-                src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                class="image"
-              />
-              <div style="padding: 14px">
-                <span>{{ group_name[5] }}</span>
-                <div class="bottom">
-                  <el-button
-                    text
-                    class="button"
-                    @click="enterGroup(group_name[5])"
-                    >进入版面</el-button
-                  >
-                </div>
-              </div>
-            </el-card>
-          </el-col>
         </el-row>
       </el-scrollbar>
     </el-container>
@@ -150,8 +91,8 @@ function enterGroup(group_name_string) {
 }
 onMounted(() => {
   axios.get("/api/catalogue", {}).then((res) => {
-    for (let i = 0; i < res.data.entry.length; i++) {
-      group_name.value[i] = res.data.entry[i];
+    for (let i = 0; i < res.data.groups.length; i++) {
+      group_name.value[i] = res.data.groups[i];
       console.log(group_name.value);
     }
     console.log(group_name.value);

@@ -36,7 +36,7 @@ const group_name = "美食天地";
 function handlepost() {
   console.log(textarea_title.value);
   console.log(textarea_content.value);
-  if (!(textarea_content == "" && textarea_title == "")) {
+  if (textarea_content.value == "" || textarea_title.value == "") {
     alert("标题和内容不能为空");
     return;
   }
