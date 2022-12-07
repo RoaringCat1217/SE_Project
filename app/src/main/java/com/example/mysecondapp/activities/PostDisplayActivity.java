@@ -114,7 +114,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     starIcon.setImageResource(R.drawable.star_selected);
                 else
                     starIcon.setImageResource(R.drawable.star_unselected);
-                downloadAvatar(posterID);
+                BackendUtils.getAvatar(this, posterID, img -> userAvatar.setImageBitmap(img));
             }
             else
                 Toast.makeText(this, "访问的帖子不存在!", Toast.LENGTH_SHORT).show();
@@ -332,30 +332,6 @@ public class PostDisplayActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "收藏失败, 请重试!", Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void downloadAvatar(String posterID) {
-        Map<String, String> query = new HashMap<>();
-        query.put("user_name", posterID);
-        BackendUtils.get(this, "getavatar", query, this::downloadAvatarCallback);
-    }
-
-    private void downloadAvatarCallback(JSONObject json) {
-        try {
-            long retCode = json.getLong("code");
-            if (retCode == 1) {
-                String imgStr = json.getString("image");
-                if (imgStr.length() != 0) {
-                    byte[] bitmapArray = Base64.decode(imgStr.split(",")[1], Base64.DEFAULT);
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
-                    userAvatar.setImageBitmap(bitmap);
-                }
-            }
-            else
-                Toast.makeText(this, "出错!", Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }

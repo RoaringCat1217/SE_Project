@@ -80,23 +80,7 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         groupHolder.repliedContent.setText(item.getRepliedContent());
 
         // 显示头像
-        Map<String, String> query = new HashMap<>();
-        query.put("user_name", item.getReplyName());
-        BackendUtils.get((AppCompatActivity) context, "getavatar", query, json -> {
-            try {
-                long retCode = json.getLong("code");
-                if (retCode == 1) {
-                    String imgStr = json.getString("image");
-                    if (imgStr.length() != 0) {
-                        byte[] bitmapArray = Base64.decode(imgStr.split(",")[1], Base64.DEFAULT);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
-                        groupHolder.replyPortrait.setImageBitmap(bitmap);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+        BackendUtils.getAvatar((AppCompatActivity) context, item.getReplyName(), img -> groupHolder.replyPortrait.setImageBitmap(img));
 
 
         return convertView;
