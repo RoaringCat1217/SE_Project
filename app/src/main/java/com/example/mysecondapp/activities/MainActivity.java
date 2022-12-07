@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -46,6 +47,19 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         RadioButton rbMain = (RadioButton) findViewById(R.id.rb_hits);
         rbMain.setChecked(true);
 
+        // 搜索
+        ImageButton searchButton = findViewById(R.id.search_bt);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText searchKey = v.findViewById(R.id.search_key);
+                String key = searchKey.getText().toString().trim();
+                // 发给后端搜索
+                // 跳到SearchFragment（用类似Group->GroupList的逻辑）
+                // ……
+            }
+        });
+
         // 回退（不知道能不能成功运行）
         ImageButton backButton = findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +89,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         groupListFragment.setArguments(bundle);
         fTransaction.add(R.id.ly_content, groupListFragment);
         fTransaction.commit();
+    }
+
+    public void showSearchList(String search) {
+
     }
 
     @Override
@@ -140,11 +158,5 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         if(groupFragment != null)fragmentTransaction.hide(groupFragment);
         if(personalFragment != null)fragmentTransaction.hide(personalFragment);
         if (groupListFragment != null) fragmentTransaction.hide(groupListFragment);
-    }
-
-    public void go_back(View view) {
-    }
-
-    public void settings(View view) {
     }
 }

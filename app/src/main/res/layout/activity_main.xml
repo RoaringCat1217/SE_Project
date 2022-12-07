@@ -19,18 +19,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:layout_marginStart="58dp"
+            android:layout_marginStart="54dp"
             android:text="搜索："
             android:textColor="@color/lighttheme"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/et_search"
+            android:id="@+id/search_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="110dp"
+            android:layout_marginStart="105dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="58dp"
+            android:layout_marginEnd="68dp"
+            android:singleLine="true"
             android:autofillHints="关键词"
             android:background="@drawable/round_text_bg"
             android:inputType="none"
@@ -49,16 +50,14 @@
             app:tint="@color/white" />
 
         <ImageButton
-            android:id="@+id/settings"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
+            android:id="@+id/search_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="360dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
             android:background="@color/translucent"
-            android:onClick="settings"
-            android:src="@mipmap/settings_icon"
+            android:src="@mipmap/search_icon"
             app:tint="@color/white" />
 
         <View
