@@ -36,13 +36,17 @@ const group_name = "美食天地";
 function handlepost() {
   console.log(textarea_title.value);
   console.log(textarea_content.value);
+  if (!(textarea_content == "" && textarea_title == "")) {
+    alert("标题和内容不能为空");
+    return;
+  }
   axios
     .get("/api/newpost", {
       params: {
         username: username,
         group_name: group_name,
-        title: textarea_title,
-        content: textarea_content,
+        title: textarea_title.value,
+        content: textarea_content.value,
       },
     })
     .then((res) => {

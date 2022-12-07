@@ -7,7 +7,8 @@
       <router-link to="/login">Login</router-link> |
       <router-link to="/group">Group</router-link> |
       <router-link to="/userinfo">Userinfo</router-link> |
-      <router-link to="/newpost">NewPost</router-link>
+      <router-link to="/newpost">NewPost</router-link>|
+      <router-link to="/postandreply">PostAndReply</router-link>
     </nav>
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
