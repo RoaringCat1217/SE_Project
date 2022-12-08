@@ -127,6 +127,7 @@ const form = reactive({
   phone_number: "",
   avatar: "",
 });
+
 let newuserinfo = ref({
   username: "admintest_www",
   gender: "-1",
@@ -135,11 +136,13 @@ let newuserinfo = ref({
   phone_number: "-1",
   nickname: "o",
 });
+
 let gender = ref("未设置");
 let age = ref("未设置");
 let tele = ref("未设置");
 let nickname = ref("未设置");
 let image_base64 = ref("");
+
 function handleUpload(file, fileList) {
   getBase64(file.raw).then((res) => {
     console.log(file.size);
@@ -167,6 +170,7 @@ function getBase64(file) {
     };
   });
 }
+
 function submitChanges() {
   if (form.name == "") {
     alert("您未输入用户名，请输入用户名后再试一次");
@@ -202,6 +206,7 @@ function submitChanges() {
     router.go(0);
   });
 }
+
 onMounted(() => {
   axios
     .get("/api/getuserinfo", {
@@ -232,15 +237,18 @@ onMounted(() => {
   width: 100%;
   height: 100%;
 }
+
 .container {
   width: calc(100% - $sideBarWidth + 10px);
   height: 100%;
+
   position: fixed;
   top: 0;
   right: 0;
   z-index: 9;
   transition: all 0.28s;
   padding: 20px;
+
   &.hidderContainer {
     width: calc(100% - $hideSideBarWidth);
   }
@@ -248,10 +256,12 @@ onMounted(() => {
 .groupcontent {
   left: 160px;
 }
+
 ::v-deep(.el-header) {
   padding: 0;
   margin: 0;
 }
+
 .title {
   font-family: fantasy;
   font-weight: bloder;
@@ -268,6 +278,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
 }
+
 .button {
   background-color: #6c8e67;
   padding: 5;
@@ -290,17 +301,20 @@ onMounted(() => {
     color: #6c8e67;
   }
 }
+
 .image {
   width: 50%;
   display: block;
   position: relative;
   left: 92px;
 }
+
 .box-card {
     margin-top: 50px;
+
 }
-.card-header {
-}
+
+
 .avatar-username {
   display: flex;
   align-items: center;
@@ -308,8 +322,7 @@ onMounted(() => {
 .el-row {
   margin-bottom: 30px;
 }
-.username {
-}
+
 .avatar-uploader .avatar {
   width: 178px;
   height: 178px;
@@ -326,9 +339,11 @@ onMounted(() => {
   overflow: hidden;
   transition: var(--el-transition-duration-fast);
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: var(--el-color-primary);
 }
+
 .el-icon.avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -336,4 +351,6 @@ onMounted(() => {
   height: 178px;
   text-align: center;
 }
+
 </style>
+

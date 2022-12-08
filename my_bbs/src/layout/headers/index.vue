@@ -3,6 +3,7 @@
     <Hamburger />
     <Breadcrumb />
     <div class="navbar-right">
+      <!--这里要实现搜索功能-->
       <el-input v-model="input3" placeholder="搜索相关帖子" class="input-with-select">
         <template #append>
           <el-button :icon="Search" />
@@ -40,7 +41,7 @@ import { Search } from '@element-plus/icons-vue'
     align-items: center;
     justify-content: flex-end;
 
-    ::v-deep .navbar-item {
+    :deep(.navbar-item) {
       display: inline-block;
       //margin-left: 18px;
       font-size: 22px;

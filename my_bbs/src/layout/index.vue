@@ -14,7 +14,7 @@
         </el-container>
     </el-container>
 </template>
-  
+
 <script setup>
 import router from '@/router';
 import Menu from './Menu'
@@ -29,32 +29,32 @@ const asideWidth = computed(() => {
 });
 
 </script>
-  
+
 <style lang="scss" scoped>
 .app-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .container {
-    width: calc(100% - $sideBarWidth + 10px);
-    height: 100%;
+  width: calc(100% - $sideBarWidth + 10px);
+  height: 100%;
 
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 9;
-    transition: all 0.28s;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  transition: all 0.28s;
 
-    &.hidderContainer {
-        width: calc(100% - $hideSideBarWidth);
-    }
+  &.hidderContainer {
+    width: calc(100% - $hideSideBarWidth);
+  }
 }
 
-::v-deep(.el-header) {
-    padding: 0;
-    margin: 0;
+:deep(.el-header) {
+  padding: 0;
+  margin: 0;
 }
 
 .title {
@@ -68,4 +68,3 @@ const asideWidth = computed(() => {
     transform: translateY(5vh);
 }
 </style>
-  
