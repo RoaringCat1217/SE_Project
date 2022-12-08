@@ -28,11 +28,7 @@ class ContentLengthIntercepter implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        Response response = chain.proceed(request);
-        return response.newBuilder()
-                .removeHeader("Content-Length")
-                .addHeader("Transfer-Encoding", "chunked")
-                .build();
+        return chain.proceed(request.newBuilder().addHeader("Connection", "Close").build());
     }
 }
 
@@ -138,6 +134,7 @@ public class BackendUtils {
                 URL url = new URL(urlStr);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
+                connection.setRequestProperty("Connection", "Closed");
                 connection.setConnectTimeout(15000);
                 connection.setReadTimeout(60000);
                 connection.connect();
