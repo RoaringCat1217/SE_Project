@@ -55,9 +55,9 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_personal,container,false);
-        user_name = (TextView) view.findViewById(R.id.usenameText);
+        user_name = view.findViewById(R.id.usenameText);
 
-        rg = (RadioGroup) view.findViewById(R.id.rg);
+        rg = view.findViewById(R.id.rg);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -83,68 +83,41 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-
         true_phone = (TextView) view.findViewById(R.id.true_phone);
         phone_edit = (TextView) view.findViewById(R.id.phone_edit);
         true_age = (TextView) view.findViewById(R.id.true_age);
         age_edit = (TextView) view.findViewById(R.id.age_edit);
 
+        fetchInfo();
 
-//        avatar.setOnClickListener(this);
-//        gender.setOnClickListener(this);
-//        phone.setOnClickListener(this);
-//        age.setOnClickListener(this);
         return view;
     }
 
-
-
-
-
-
-    public void showInfo(String id){
-        user_name.setText(id);
+    public void fetchInfo(){
+        user_name.setText(UserInfo.userID);
         Map<String, String> query = new HashMap<>();
-        query.put("name", id);
-        BackendUtils.get(this.getActivity(), "getuserinfo", query, (JSONObject json)->{
-            try {
-                for(int i = 0; i < json.length(); ++i) {
-                    System.out.println(json.names().get(i).toString());
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
-                long retCode = json.getLong("code");
-                System.out.println(retCode);
-                if (retCode == 1 || retCode == 0) {
-                    String gender = json.getString("gender");
-                    if (gender == "female")
-                        rg.check(R.id.female);
-                    else
-                        rg.check(R.id.male);
+        query.put("username", UserInfo.userID);
+        BackendUtils.get(getActivity(), "getuserinfo", query, this::fetchInfoCallback);
+        BackendUtils.getAvatar(getActivity(), UserInfo.userID, img -> usrPortrait.setImageBitmap(img));
+    }
 
-                    String phone = json.getString("phone_number");
-                    int age = json.getInt("age");
-                    String head = json.getString("avatar");
-
-                    phone_edit.setText(phone + " >  ");
-                    age_edit.setText(age + " >  ");
-
-                    if(retCode == 1) {
-                        Base64.Decoder decoder = Base64.getDecoder();
-                        head = head.replace(" ", "+");
-                        byte[] decoded = decoder.decode(head.split(",")[1]);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
-                        avatar.setImageBitmap(bitmap);
-                    }
-                }
+    public void fetchInfoCallback(JSONObject json){
+        try {
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                String gender = json.getString("gender");
+                if (gender.equals("female"))
+                    rg.check(R.id.female);
                 else
-                    Toast.makeText(this.getActivity(), "获取个人信息失败!", Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    rg.check(R.id.male);
+                String phone = json.getString("phone_number");
+                true_phone.setText(phone);
+                int age = json.getInt("age");
+                true_age.setText(Integer.valueOf(age).toString());
             }
-        });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
