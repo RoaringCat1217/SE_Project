@@ -37,16 +37,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PersonalFragment extends Fragment implements View.OnClickListener {
     private ImageView avatar;
     private TextView user_name;
-    private TextView true_gender;
-    private TextView gender_edit;
     private TextView true_phone;
     private TextView phone_edit;
     private TextView true_age;
     private TextView age_edit;
 
-    private LinearLayout gender;
-    private LinearLayout phone;
-    private LinearLayout age;
 
     private RadioGroup rg;
     private Button saveBt;
@@ -84,27 +79,21 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 // 上传照片
-                
+
             }
         });
 
 
-        avatar = (ImageView) view.findViewById(R.id.imageView2);
-        true_gender = (TextView) view.findViewById(R.id.true_gender);
-        gender_edit = (TextView) view.findViewById(R.id.gender_edit);
         true_phone = (TextView) view.findViewById(R.id.true_phone);
         phone_edit = (TextView) view.findViewById(R.id.phone_edit);
         true_age = (TextView) view.findViewById(R.id.true_age);
         age_edit = (TextView) view.findViewById(R.id.age_edit);
 
-        gender = (LinearLayout) view.findViewById(R.id.gender_entry);
-        phone = (LinearLayout) view.findViewById(R.id.phone_entry);
-        age = (LinearLayout) view.findViewById(R.id.age_entry);
 
-        avatar.setOnClickListener(this);
-        gender.setOnClickListener(this);
-        phone.setOnClickListener(this);
-        age.setOnClickListener(this);
+//        avatar.setOnClickListener(this);
+//        gender.setOnClickListener(this);
+//        phone.setOnClickListener(this);
+//        age.setOnClickListener(this);
         return view;
     }
 
@@ -130,11 +119,15 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
                 System.out.println(retCode);
                 if (retCode == 1 || retCode == 0) {
                     String gender = json.getString("gender");
+                    if (gender == "female")
+                        rg.check(R.id.female);
+                    else
+                        rg.check(R.id.male);
+
                     String phone = json.getString("phone_number");
                     int age = json.getInt("age");
                     String head = json.getString("avatar");
 
-                    gender_edit.setText(gender + " >  ");
                     phone_edit.setText(phone + " >  ");
                     age_edit.setText(age + " >  ");
 
@@ -156,22 +149,22 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.imageView2:
-                showTypeDialog();
-                break;
-            case R.id.gender_entry:
-                showGenderDialog();
-                break;
-            case R.id.phone_entry:
-                showPhoneDialog();
-                break;
-            case R.id.age_entry:
-                showAgeDialog();
-                break;
-            default:
-                break;
-        }
+//        switch (view.getId()){
+//            case R.id.imageView2:
+//                showTypeDialog();
+//                break;
+//            case R.id.gender_entry:
+//                showGenderDialog();
+//                break;
+//            case R.id.phone_entry:
+//                showPhoneDialog();
+//                break;
+//            case R.id.age_entry:
+//                showAgeDialog();
+//                break;
+//            default:
+//                break;
+//        }
     }
 
     private void showAgeDialog() {
