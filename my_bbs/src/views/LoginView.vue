@@ -93,6 +93,7 @@
 import { ref, reactive } from 'vue'
 import api from '@/api/index'
 import router from '@/router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'login-register',
@@ -100,11 +101,14 @@ export default {
 
   },
   setup(props) {
+    //使用Vuex
+    const store = useStore();
+
     const form = reactive({
-      username: 'admintest',
-      password: '666',
+      username: '',
+      password: '',
       checkPassword: ''
-    })
+    });
 
     const isLogin = ref(true);
     const formRef = ref(null);
@@ -115,8 +119,8 @@ export default {
         callback(new Error('用户名不能为空'));
       } else if (!/^\w+$/.test(value)) {
         callback(new Error('用户名只能包含数字、英文字母和下划线'));
-      } else if (value.length > 10) {
-        callback(new Error('用户名长度不能超过十个字符'));
+      } else if (value.length > 20) {
+        callback(new Error('用户名长度不能超过二十个字符'));
       } else {
         callback();
       }
@@ -146,7 +150,7 @@ export default {
       }
     }
 
-    // 登陆表单验证
+    // 登录表单验证
     const loginRules = reactive({
       username: [
         {
@@ -201,31 +205,85 @@ export default {
     }
 
 
-    //登录校验
+    //登录校验与登录
     const login = () => {
       formRef.value.validate(async (valid) => {
         if (valid) {
           //store.dispatch('app/login', form.value);
           const res = await api.handleLogin(form)
-            .then((res) => {
+            .then(res => {
               //路由页面跳转
-              router.replace('/home');
+              const data = res.data;
+              //成功登入
+              if (data.code === 1) {
+                ElMessage({
+                  message: '登录成功！',
+                  type: 'success',
+                  duration: 1000
+                });
+
+                //localStorage里存的都是字符串
+                store.commit('setToken','true');
+                store.commit('setUsername',form.username);
+                //console.log(form);
+
+                //跳转到主页面
+                router.replace(store.getters.getPath);
+              }
+              else {
+                ElMessage({
+                message: '登录失败！',
+                type: 'error',
+                duration: 1000
+                });
+              }
             })
-            .catch(err=>{});
-          
-          console.log(res);
+            .catch(err => {
+              console.log(err);
+            });        
+          //表单校验成功  
           console.log('submit!');
-        } else {
+        } 
+        else {
           console.log('error submit!!');
-          //return false;
         }
       })
     }
 
+    //注册校验与注册
     const register = () => {
       formRef.value.validate(async (valid) => {
         if (valid) {
           //store.dispatch('app/login', form.value);
+          const res = await api.handleRegister(form)
+            .then((res) => {
+              const data = res.data;
+              //注册成功
+              if(data.code === 1){
+                router.go(0);
+                ElMessage({
+                  message: '注册成功！',
+                  type: 'success',
+                  duration: 1000
+                });
+              }
+              //注册失败
+              else if(data.code === 2){
+                ElMessage({
+                  message: '注册失败！',
+                  type: 'error',
+                  duration: 1000
+                });
+              }
+              //用户名重复
+              else{
+                ElMessage({
+                  message: '注册失败！用户名重复！',
+                  type: 'error',
+                  duration: 1000
+                });
+              }     
+            })
           console.log('submit!');
         } else {
           console.log('error submit!!');

@@ -33,7 +33,7 @@ module.exports = defineConfig({
         additionalData: 
         `
           @import "@/styles/variables.scss";  // scss文件地址
-          @import "@/styles/mixin.scss";     // scss文件地址
+          @import "@/styles/mixin.scss";    
           @import "@/styles/sidebar.scss";
         `
       }

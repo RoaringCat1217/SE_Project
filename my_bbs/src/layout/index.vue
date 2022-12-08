@@ -1,44 +1,32 @@
 <template>
     <el-container class="app-wrapper">
-        <el-aside width="200px" class="sidebar-container">
+        <el-aside :width="asideWidth" class="sidebar-container">
             <Menu />
         </el-aside>
-        <el-container class="container">
-            <el-header height="20%" background="green">
-                <div class="title">
-                    热度榜单
-                </div>
+        <el-container class="container" :class="{ hidderContainer: !$store.getters.getSidebarType }">
+            <el-header>
+                <Headers />
             </el-header>
             <el-main>
-                <el-table :data="tableData" border style="padding-left;: 10%">
-                    <el-table-column prop="group_info" label="Group" width="180" />
-                    <el-table-column prop="hot_index" label="Hot Index" width="180" />
-                    <el-table-column prop="rank" label="Rank" width="180" />
-                    <el-table-column prop="title" label="Title">
-                    </el-table-column>
-                </el-table>
+                <router-view />
             </el-main>
+
         </el-container>
     </el-container>
 </template>
   
 <script setup>
+import router from '@/router';
 import Menu from './Menu'
+import Headers from './headers'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
-const tableData = [
-    {
-        "group_info": "food",
-        "hot_index": 50,
-        "rank": 0,
-        "title": "blablabla"
-    },
-    {
-        "group_info": "food",
-        "hot_index": 50,
-        "rank": 1,
-        "title": "blablabla"
-    }
-]
+const store = useStore();
+
+const asideWidth = computed(() => {
+    return store.getters.getSidebarType ? '210px' : '67px';
+});
 
 </script>
   
@@ -70,14 +58,14 @@ const tableData = [
 }
 
 .title {
-  font-family: fantasy;
-  font-weight: bloder;
-  color: #6c8e67;
-  font-size: 3em;
-  text-align: center; //水平居中
-  position: relative;
-  top: auto;
-  transform: translateY(5vh);
+    font-family: fantasy;
+    font-weight: bloder;
+    color: #6c8e67;
+    font-size: 3em;
+    text-align: center; //水平居中
+    position: relative;
+    top: auto;
+    transform: translateY(5vh);
 }
 </style>
   

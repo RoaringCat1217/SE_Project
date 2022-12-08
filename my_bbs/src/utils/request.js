@@ -40,10 +40,14 @@ const errorHandle = (status, info) => {
 //网页向后台发送请求请求时的拦截器
 instance.interceptors.request.use(
     (config) => {
-        if (config.method === "post") {
+        //添加token认证
+        if(localStorage.getItem('token')){
+            config.headers.Authorization = localStorage.getItem('token');
+        }
+        /*if (config.method === "post") {
             //qs.stringify 将一个参数对象格式化为字符串
             config.data = queryString.stringify(config.data);
-        }
+        }*/
         return config;
     },
     (error) => {
@@ -54,26 +58,7 @@ instance.interceptors.request.use(
 //网页获取后台数据时的拦截器
 instance.interceptors.response.use(
     (response) => {
-        //return response.status === 200 ? Promise.resolve(response) : Promise.reject(response);
-        //这里去掉冗余的data包装
-        const data = response.data;
-        //成功登入
-        if (data.code === 1) {
-            ElMessage({
-                message: '登录成功！',
-                type: 'success',
-                duration: 1000
-            });
-            return Promise.resolve(data);
-        } else {
-            //这里需要后端添加一些更加具体的错误信息
-            ElMessage({
-                message: '登陆失败！ 错误码：' + data.code,
-                type: 'error',
-                duration: 1000
-            });
-            return Promise.reject(new Error("登陆失败！ 错误码："+ data.code));
-        }
+        return response.status === 200 ? Promise.resolve(response) : Promise.reject(response);
     },
     (error) => {
         const response = error.response;

@@ -3,10 +3,11 @@
     <Hamburger />
     <Breadcrumb />
     <div class="navbar-right">
-      <Driver class="navbar-item" />
-      <screen-full class="navbar-item" />
-      <Lang class="navbar-item" />
-      <Avatar class="navbar-item" />
+      <el-input v-model="input3" placeholder="搜索相关帖子" class="input-with-select">
+        <template #append>
+          <el-button :icon="Search" />
+        </template>
+      </el-input>
     </div>
   </div>
 </template>
@@ -14,10 +15,8 @@
 <script setup>
 import Hamburger from './components/hamburger.vue'
 import Breadcrumb from './components/breadcrumb.vue'
-import Avatar from './components/avatar.vue'
-import Lang from './components/lang.vue'
-import ScreenFull from './components/screenFull.vue'
-import Driver from './components/driver'
+import { Search } from '@element-plus/icons-vue'
+
 </script>
 
 <style lang="scss" scoped>
@@ -32,19 +31,27 @@ import Driver from './components/driver'
   align-items: center;
   box-sizing: border-box;
   position: relative;
+
   .navbar-right {
+    padding-left: 50%;
+    padding-right: 15px;
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
     ::v-deep .navbar-item {
       display: inline-block;
-      margin-left: 18px;
+      //margin-left: 18px;
       font-size: 22px;
-      color: #5a5e66;
+      //color: #5a5e66;
       box-sizing: border-box;
       cursor: pointer;
     }
   }
+}
+
+.el-input {
+  --el-input-focus-border-color: #6c8e67;
 }
 </style>
