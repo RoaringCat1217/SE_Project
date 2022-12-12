@@ -35,6 +35,21 @@ const api = {
     },
     getSearchResult(data) {
         return axios.post(path.search,data);
+    },
+    like(data) {
+        return axios.get(path.like,{params:data});
+    },
+    star(data) {
+        return axios.get(path.star, {params:data});
+    },
+    newComment(data) {
+        return axios.get(path.newComment, {params:data});
+    },
+    getUserInfo(data) {
+        return axios.get(path.getUserInfo, {params:data});
+    },
+    updateUserInfo(data) {
+        return axios.post(path.updateUserInfo, data);
     }
 }
 

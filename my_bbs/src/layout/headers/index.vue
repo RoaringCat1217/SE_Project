@@ -2,11 +2,12 @@
   <div class="navbar">
     <Hamburger />
     <Breadcrumb />
-    <div class="navbar-right">
+    <!--搜索结果界面不显示搜索框-->
+    <div class="navbar-right"  v-if="store.getters.getPath.slice(0,7) === '/search' ? false:true">
       <!--这里要实现搜索功能-->
-      <el-input v-model="input3" placeholder="搜索相关帖子" class="input-with-select">
+      <el-input v-model="query" placeholder="搜索相关帖子" class="input-with-select">
         <template #append>
-          <el-button :icon="Search" />
+          <el-button :icon="Search" @click="handleSearch"/>
         </template>
       </el-input>
     </div>
@@ -17,6 +18,33 @@
 import Hamburger from './components/hamburger.vue'
 import Breadcrumb from './components/breadcrumb.vue'
 import { Search } from '@element-plus/icons-vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import api from '@/api/index'
+import router from '@/router'
+import { useStore } from 'vuex'
+
+const store = useStore();
+
+const query = ref('');
+
+
+const handleSearch = () => {
+  //console.log(query.value);
+  if (query.value == '') {
+    ElMessage({
+      message: '搜索失败 请至少输入一个关键词！',
+      type: 'error',
+      duration: 1000
+    });
+    return;
+  }
+  let nowPath = store.getters.getPath;
+  let toPath = '/search' + '/' + query.value;
+
+    //console.log(path);
+    router.push(toPath);
+    store.commit('setPath', toPath);
+}
 
 </script>
 

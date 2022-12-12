@@ -8,5 +8,6 @@ export default {
         HotList:'热榜',
         Star:'收藏夹',
         UserInfo:'个人主页',
+        SearchResult:'搜索结果'
     }
 }

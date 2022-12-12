@@ -10,6 +10,7 @@ export default createStore({
     userAvatar: localStorage.getItem("userAvatar") || "",
     pth: sessionStorage.getItem("path") || '/home', //当前页面的路由
     sidebarType: true, // true为显示侧边栏，false为隐藏侧边栏
+    repliedId: localStorage.getItem("repliedId") || -1,
   },
   getters: {
     getToken(state) {
@@ -27,6 +28,9 @@ export default createStore({
     getSidebarType(state) {
       return state.sidebarType;
     },
+    getRepliedId(state) {
+      return state.repliedId;
+    }
   },
   mutations: {
     setToken(state, token) {
@@ -44,6 +48,10 @@ export default createStore({
     setPath(state, path) {
       state.pth = path;
       sessionStorage.setItem("path", path);
+    },
+    setRepliedId(state,post_id) {
+      state.repliedId = post_id;
+      localStorage.setItem("repliedId", post_id);
     },
 
     changeSidebarType(state) {

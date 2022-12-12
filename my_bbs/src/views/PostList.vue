@@ -114,7 +114,7 @@ const commitRules = reactive({
         },
         {
             max: 1000,
-            message: '标题长度不能超过一千个字符',
+            message: '正文长度不能超过一千个字符',
             trigger: 'blur'
         }
     ]

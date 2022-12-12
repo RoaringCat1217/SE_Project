@@ -5,7 +5,9 @@
         <template #header>
           <div class="card-header">
             <span>站内热点</span>
+            <!--
             <el-button class="button" size="small" text @click="goHotList">更多</el-button>
+            -->
           </div>
         </template>
 
@@ -124,7 +126,7 @@ const testPost = () => {
 
 }
 
-::v-deep .el-card__header {
+:deep(.el-card__header) {
   background-color: #6c8e67;
 }
 
