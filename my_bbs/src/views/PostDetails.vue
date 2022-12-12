@@ -85,7 +85,7 @@
                         type="textarea" />
                     <template #footer>
                         <span class="dialog-footer">
-                            <button class="commit-button" @click="handleCommit(this.$store.getters.getRepliedId)">
+                            <button class="commit-button" @click="handleCommit(store.getters.getRepliedId)">
                                 提交
                             </button>
                         </span>
