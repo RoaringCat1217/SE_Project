@@ -1,13 +1,17 @@
 package com.example.mysecondapp.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -21,36 +25,37 @@ import com.example.mysecondapp.activities.PostDisplayActivity;
 import com.example.mysecondapp.models.CommentItem;
 import com.example.mysecondapp.utils.BackendUtils;
 import com.example.mysecondapp.R;
+import com.example.mysecondapp.utils.Constants;
 import com.example.mysecondapp.utils.UserInfo;
 import com.example.mysecondapp.activities.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.Base64;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import android.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PersonalFragment extends Fragment implements View.OnClickListener {
-    private ImageView avatar;
+public class PersonalFragment extends Fragment{
     private TextView user_name;
     private TextView true_phone;
-    private TextView phone_edit;
+    private EditText phone_edit;
     private TextView true_age;
-    private TextView age_edit;
+    private EditText age_edit;
 
 
     private RadioGroup rg;
     private Button saveBt;
     private CircleImageView usrPortrait;
-
-    private final String content;
-    public PersonalFragment(String content) {
-        this.content = content;
-    }
+    private boolean portraitUpdated = false;
+    private boolean genderUpdated = false;
+    private String gender;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,35 +63,25 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
         user_name = view.findViewById(R.id.usenameText);
 
         rg = view.findViewById(R.id.rg);
-        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                // 性别信息
-                // ……
-                int ifMale = R.id.male;
-
-            }
+        rg.setOnCheckedChangeListener((group, checkedId) -> {
+            genderUpdated = true;
+            if (checkedId == R.id.male)
+                gender = "male";
+            else
+                gender = "female";
         });
 
-        saveBt = (Button) view.findViewById(R.id.save_bt);
-        saveBt.setOnClickListener(view1 -> {
-            // 点击了“保存”按钮
-            // 告诉后端：updateuserinfo
-        });
+        saveBt = view.findViewById(R.id.save_bt);
+        saveBt.setOnClickListener(view1 -> updateInfo());
 
-        usrPortrait = (CircleImageView) view.findViewById(R.id.usr_portrait);
-        usrPortrait.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 上传照片
+        usrPortrait = view.findViewById(R.id.usr_portrait);
+        usrPortrait.setOnClickListener(v -> selectPhoto());
 
-            }
-        });
+        true_phone = view.findViewById(R.id.true_phone);
+        phone_edit = view.findViewById(R.id.phone_edit);
+        true_age = view.findViewById(R.id.true_age);
+        age_edit = view.findViewById(R.id.age_edit);
 
-        true_phone = (TextView) view.findViewById(R.id.true_phone);
-        phone_edit = (TextView) view.findViewById(R.id.phone_edit);
-        true_age = (TextView) view.findViewById(R.id.true_age);
-        age_edit = (TextView) view.findViewById(R.id.age_edit);
 
         fetchInfo();
 
@@ -111,44 +106,84 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
                 else
                     rg.check(R.id.male);
                 String phone = json.getString("phone_number");
-                true_phone.setText(phone);
+                if (phone.equals("-1"))
+                    true_phone.setText("暂无电话号码");
+                else
+                    true_phone.setText(phone);
                 int age = json.getInt("age");
-                true_age.setText(Integer.valueOf(age).toString());
+                if (age == -1)
+                    true_age.setText("暂无年龄");
+                else
+                    true_age.setText(Integer.valueOf(age).toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onClick(View view) {
-//        switch (view.getId()){
-//            case R.id.imageView2:
-//                showTypeDialog();
-//                break;
-//            case R.id.gender_entry:
-//                showGenderDialog();
-//                break;
-//            case R.id.phone_entry:
-//                showPhoneDialog();
-//                break;
-//            case R.id.age_entry:
-//                showAgeDialog();
-//                break;
-//            default:
-//                break;
-//        }
+    public void selectPhoto() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, Constants.SELECT_PHOTO);
     }
 
-    private void showAgeDialog() {
+    public void selectPhotoCallback() {
+        usrPortrait.setImageURI(UserInfo.uri);
+        portraitUpdated = true;
     }
 
-    private void showPhoneDialog() {
+    private void updateInfo() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("username", UserInfo.userID);
+            json.put("nickname", "-1");
+            if (genderUpdated)
+                json.put("gender", gender);
+            if (phone_edit.getText().toString().length() > 0)
+                json.put("phone_number", phone_edit.getText().toString());
+            else
+                json.put("phone_number", -1);
+            if (age_edit.getText().toString().length() > 0)
+                json.put("age", age_edit.getText().toString());
+            else
+                json.put("age", "-1");
+            if (portraitUpdated)
+            {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), UserInfo.uri);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream .toByteArray();
+                String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                json.put("avatar", encoded);
+            } else
+                json.put("avatar", "-1");
+            BackendUtils.post(getActivity(), "updateuserinfo", json, this::updateInfoCallback);
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void showGenderDialog() {
+    private void updateInfoCallback(JSONObject json) {
+        try {
+            long retCode = json.getLong("code");
+            if (retCode == 1) {
+                portraitUpdated = false;
+                genderUpdated = false;
+                if (phone_edit.getText().toString().length() > 0) {
+                    true_phone.setText(phone_edit.getText().toString());
+                    phone_edit.setText(null);
+                }
+                if (age_edit.getText().toString().length() > 0) {
+                    true_age.setText(age_edit.getText().toString());
+                    age_edit.setText(null);
+                }
+                Toast.makeText(getActivity(), "更新成功!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "更新失败!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void showTypeDialog() {
-    }
 }
