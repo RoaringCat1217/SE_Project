@@ -215,11 +215,7 @@ def getavatar():
 def getuserinfo():
     usr_name = request.args.get("username")
     userid=get_id_from_name(usr_name)
-<<<<<<< HEAD
     if userid==None: return jsonify({'code':2})
-=======
-    if userid==None: return jsonify({'code':0})
->>>>>>> 0ab9bf1bea0f9fffcca83f5d1817569c48a637ab
     info=get_usr_info_by_id(userid)
     if info['nickname']==None:
         nickname=-1
@@ -229,7 +225,6 @@ def getuserinfo():
         contents = read_from_file('images/'+usr_name+'.txt')
         
     except:
-<<<<<<< HEAD
         return jsonify({'code':1,'nickname':nickname, 'avatar':-1, 'gender':info['gender'], 'phone_number':str(info['phone_num']),'age':info['age']})
     
     return jsonify({'code':1,'nickname':nickname,'avatar':contents, 'gender':info['gender'], 'phone_number':str(info['phone_num']),'age':info['age']})
@@ -516,9 +511,6 @@ def getuserinfo():
         
     except:
         return jsonify({'code':1,'nickname':nickname, 'avatar':-1, 'gender':info['gender'], 'phone_number':str(info['phone_num']),'age':info['age']})
-=======
-        return jsonify({'code':0,'nickname':nickname, 'avatar':[], 'gender':info['gender'], 'phone_number':str(info['phone_num']),'age':info['age']})
->>>>>>> 0ab9bf1bea0f9fffcca83f5d1817569c48a637ab
     
     return jsonify({'code':1,'nickname':nickname,'avatar':contents, 'gender':info['gender'], 'phone_number':str(info['phone_num']),'age':info['age']})
 
