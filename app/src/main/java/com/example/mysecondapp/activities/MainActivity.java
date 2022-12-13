@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.app.Instrumentation;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,6 +28,7 @@ import com.example.mysecondapp.fragments.GroupFragment;
 import com.example.mysecondapp.fragments.HitsFragment;
 import com.example.mysecondapp.fragments.PersonalFragment;
 import com.example.mysecondapp.R;
+import com.example.mysecondapp.utils.UserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -143,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         } else if(checkedId == R.id.rb_personal) {
             // 查看个人信息要求登录
             LoginUtils.checkLogin(this, ()->{
-                personalFragment = new PersonalFragment("个人");
+                personalFragment = new PersonalFragment();
                 fTransaction.add(R.id.ly_content, personalFragment);
                 fTransaction.commit();
             });
@@ -159,5 +162,14 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         if(personalFragment != null)fragmentTransaction.hide(personalFragment);
         if (groupListFragment != null) fragmentTransaction.hide(groupListFragment);
         if (searchFragment != null) fragmentTransaction.hide(searchFragment);
+    }
+
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        if (reqCode == Constants.SELECT_PHOTO) {
+            UserInfo.uri = data.getData();
+            personalFragment.selectPhotoCallback();
+        }
     }
 }

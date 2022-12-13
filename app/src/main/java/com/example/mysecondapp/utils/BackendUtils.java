@@ -28,7 +28,8 @@ class ContentLengthIntercepter implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        return chain.proceed(request.newBuilder().addHeader("Connection", "Close").build());
+        Response response = chain.proceed(request.newBuilder().addHeader("Connection", "Close").build());
+        return response.newBuilder().removeHeader("Content-Length").addHeader("Content-Length", "-1").build();
     }
 }
 
@@ -42,15 +43,14 @@ public class BackendUtils {
         void run(Bitmap img);
     }
 
-    private static final OkHttpClient client = new OkHttpClient.Builder()
-            .addInterceptor(new ContentLengthIntercepter())
-            .retryOnConnectionFailure(true)
-            .build();
-
     private static final String baseURL = "http://47.93.251.137:3000/";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public static void get(Activity activity, String path, Map<String, String> query, BackendCallback callback) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new ContentLengthIntercepter())
+                .retryOnConnectionFailure(true)
+                .build();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseURL + path).newBuilder();
         if (query != null) {
             for (Map.Entry<String, String> entry: query.entrySet())
@@ -90,6 +90,10 @@ public class BackendUtils {
     }
 
     public static void post(Activity activity, String path, JSONObject json, BackendCallback callback) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new ContentLengthIntercepter())
+                .retryOnConnectionFailure(true)
+                .build();
         RequestBody body = RequestBody.create(JSON, json.toString());
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseURL + path).newBuilder();
         String url = urlBuilder.build().toString();
@@ -150,7 +154,7 @@ public class BackendUtils {
                     long retCode = json.getLong("code");
                     if (retCode == 1) {
                         String imgStr = json.getString("image");
-                        if (imgStr.length() != 0) {
+                        if (imgStr != null && imgStr.length() > 2) {
                             byte[] bitmapArray = Base64.decode(imgStr.split(",")[1], Base64.DEFAULT);
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
                             activity.runOnUiThread(()->{callback.run(bitmap);});
