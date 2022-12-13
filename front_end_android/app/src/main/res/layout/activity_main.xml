@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btn"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/ly_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/darktheme">
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="54dp"
+            android:text="搜索："
+            android:textColor="@color/lighttheme"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/search_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="105dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="68dp"
+            android:singleLine="true"
+            android:autofillHints="关键词"
+            android:background="@drawable/round_text_bg"
+            android:inputType="none"
+            android:textColor="@color/darktheme"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/translucent"
+            android:onClick="go_back"
+            android:src="@mipmap/back_icon"
+            app:tint="@color/white" />
+
+        <ImageButton
+            android:id="@+id/search_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/translucent"
+            android:src="@mipmap/search_icon"
+            app:tint="@color/white" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/lighttheme"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_hits"
+            style="@style/tab_menu_style"
+            android:text="@string/hits_string"
+            app:drawableTopCompat="@drawable/tab_menu_hits" />
+
+        <RadioButton
+            android:id="@+id/rb_favorite"
+            style="@style/tab_menu_style"
+            android:text="@string/favorite_string"
+            app:drawableTopCompat="@drawable/tab_menu_favorite" />
+
+        <RadioButton
+            android:id="@+id/rb_edit"
+            style="@style/tab_menu_style"
+            android:text="@string/edit_string"
+            app:drawableTopCompat="@drawable/tab_menu_edit" />
+
+        <RadioButton
+            android:id="@+id/rb_group"
+            style="@style/tab_menu_style"
+            android:text="@string/group_string"
+            app:drawableTopCompat="@drawable/tab_menu_group" />
+
+        <RadioButton
+            android:id="@+id/rb_personal"
+            style="@style/tab_menu_style"
+            android:text="@string/personal_string"
+            app:drawableTopCompat="@drawable/tab_menu_personal" />
+
+    </RadioGroup>
+
+    <View
+        android:id="@+id/div_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_above="@id/rg_tab_bar"/>
+
+
+    <FrameLayout
+        android:id="@+id/ly_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/div_tab_bar"
+        android:layout_below="@id/ly_top_bar"
+        android:layout_marginTop="-2dp"
+        android:layout_marginBottom="2dp">
+
+    </FrameLayout>
+
+</RelativeLayout>

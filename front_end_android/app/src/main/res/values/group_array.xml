@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="spinner_name">
+        <item>跳蚤市场</item>
+        <item>美食天地</item>
+        <item>资料共享</item>
+    </array>
+</resources>
