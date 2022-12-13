@@ -18,20 +18,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
-
-class ContentLengthIntercepter implements Interceptor {
-    @Override
-    public Response intercept(Chain chain) throws IOException {
-        Request request = chain.request();
-        Response response = chain.proceed(request.newBuilder().addHeader("Connection", "Close").build());
-        return response.newBuilder().removeHeader("Content-Length").addHeader("Content-Length", "-1").build();
-    }
-}
 
 public class BackendUtils {
 
@@ -48,7 +40,8 @@ public class BackendUtils {
 
     public static void get(Activity activity, String path, Map<String, String> query, BackendCallback callback) {
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new ContentLengthIntercepter())
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseURL + path).newBuilder();
@@ -77,12 +70,19 @@ public class BackendUtils {
                     Toast.makeText(activity, "服务器端出错!", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 } else {
-                    String jsonStr = response.body().string();
                     try {
-                        JSONObject json = new JSONObject(jsonStr);
-                        activity.runOnUiThread(()->{callback.run(json);});
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        String jsonStr = response.body().string();
+                        try {
+                            JSONObject json = new JSONObject(jsonStr);
+                            activity.runOnUiThread(()->{callback.run(json);});
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (ProtocolException e) {
+                        Looper.prepare();
+                        Toast.makeText(activity, "网络连接出错! 请重试.", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
                     }
                 }
             }
@@ -91,7 +91,8 @@ public class BackendUtils {
 
     public static void post(Activity activity, String path, JSONObject json, BackendCallback callback) {
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new ContentLengthIntercepter())
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
         RequestBody body = RequestBody.create(JSON, json.toString());
