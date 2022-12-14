@@ -6,25 +6,48 @@
         <el-row class="avatar-username" :gutter="20">
           <el-col :span="1"></el-col>
           <el-col :span="2">
-            <el-avatar :src="image_base64 == '' ? init_base64 : image_base64" :size="100" />
+            <el-avatar
+              :src="image_base64 == '' ? init_base64 : image_base64"
+              :size="100"
+            />
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="2" class="username">
-            <span>{{username}}</span>
+            <span>{{ username }}</span>
           </el-col>
           <el-col :span="1" :offset="12">
-            <el-button class="button" text @click="dialogVisible = true">修改信息</el-button>
+            <el-button class="button" text @click="dialogVisible = true"
+              >修改信息</el-button
+            >
           </el-col>
         </el-row>
       </div>
     </template>
     <el-descriptions title="详细资料" :column="3" border>
-      <el-descriptions-item label="昵称" label-align="center" align="center" label-class-name="my-label"
-        class-name="my-content" width="150px">{{ nickname }}</el-descriptions-item>
-      <el-descriptions-item label="性别" label-align="center" align="center" label-class-name="my-label"
-        class-name="my-content" width="150px">{{ gender }}</el-descriptions-item>
-      <el-descriptions-item label="年龄" label-align="center" align="center">{{ age }}</el-descriptions-item>
-      <el-descriptions-item label="电话" label-align="center" align="center">{{ tele }}</el-descriptions-item>
+      <el-descriptions-item
+        label="昵称"
+        label-align="center"
+        align="center"
+        label-class-name="my-label"
+        class-name="my-content"
+        width="150px"
+        >{{ nickname }}</el-descriptions-item
+      >
+      <el-descriptions-item
+        label="性别"
+        label-align="center"
+        align="center"
+        label-class-name="my-label"
+        class-name="my-content"
+        width="150px"
+        >{{ gender }}</el-descriptions-item
+      >
+      <el-descriptions-item label="年龄" label-align="center" align="center">{{
+        age
+      }}</el-descriptions-item>
+      <el-descriptions-item label="电话" label-align="center" align="center">{{
+        tele
+      }}</el-descriptions-item>
       <el-descriptions-item label="其他" label-align="center" align="center">
         <el-tag size="small" type="info">暂无</el-tag>
       </el-descriptions-item>
@@ -41,21 +64,37 @@
           <el-option label="女" value="female" />
         </el-select>
       </el-form-item>
-      <el-form-item label="年龄" prop="age" :rules="[
-        { required: false },
-        { type: 'number', message: '年龄必须为整数' },
-      ]">
+      <el-form-item
+        label="年龄"
+        prop="age"
+        :rules="[
+          { required: false },
+          { type: 'number', message: '年龄必须为整数' },
+        ]"
+      >
         <el-input v-model.number="form.age" type="text" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="电话" prop="phone_number" :rules="[
-        { required: false },
-        { type: 'number', message: '电话号码必须为数字' },
-      ]">
-        <el-input v-model.number="form.phone_number" type="text" autocomplete="off" />
+      <el-form-item
+        label="电话"
+        prop="phone_number"
+        :rules="[
+          { required: false },
+          { type: 'number', message: '电话号码必须为数字' },
+        ]"
+      >
+        <el-input
+          v-model.number="form.phone_number"
+          type="text"
+          autocomplete="off"
+        />
       </el-form-item>
       <el-form-item label="用户头像">
-        <el-upload class="avatar-uploader" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-          :show-file-list="false" :on-change="handleUpload">
+        <el-upload
+          class="avatar-uploader"
+          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          :show-file-list="false"
+          :on-change="handleUpload"
+        >
           <img v-if="form.avatar" :src="form.avatar" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon">
             <Plus />
@@ -75,10 +114,9 @@
 
 <script setup>
 import { ref, reactive, onMounted, computed } from "vue";
-import router from '@/router'
-import { useStore } from 'vuex'
+import router from "@/router";
+import { useStore } from "vuex";
 import api from "@/api";
-
 
 const dialogVisible = ref(false);
 
@@ -87,7 +125,9 @@ const username = computed(() => {
   return store.getters.getUsername;
 });
 
-const init_base64 = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');
+const init_base64 = ref(
+  "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+);
 
 const form = reactive({
   nickname: "",
@@ -145,14 +185,14 @@ function submitChanges() {
   if (form.age) {
     if (typeof form.age != "number") {
       ElMessage({
-        message: '输入的年龄应该为整数！',  
-        type: 'error',
-        duration: 1000
+        message: "输入的年龄应该为整数！",
+        type: "error",
+        duration: 1000,
       });
       return;
     }
   }
-  
+
   if (form.nickname != "") {
     newUserInfo.value.nickname = form.nickname;
   }
@@ -168,21 +208,21 @@ function submitChanges() {
   if (form.avatar != "") {
     newUserInfo.value.avatar = form.avatar;
   }
-  console.log(newUserInfo.value)
+  console.log(newUserInfo.value);
   api.updateUserInfo(newUserInfo.value).then((res) => {
     console.log(res.data.code);
     if (res.data.code != 1) {
       ElMessage({
-        message: '个人信息更新失败！',
-        type: 'error',
-        duration: 1000
+        message: "个人信息更新失败！",
+        type: "error",
+        duration: 1000,
       });
     } else {
       dialogVisible.value = false;
       ElMessage({
-        message: '个人信息更新成功！',
-        type: 'success',
-        duration: 1000
+        message: "个人信息更新成功！",
+        type: "success",
+        duration: 1000,
       });
       router.go(0);
     }
@@ -190,36 +230,30 @@ function submitChanges() {
 }
 
 onMounted(() => {
-  api.getUserInfo({username: store.getters.getUsername})
-    .then(res => {
-      if (res.data.gender == "male") {
-        gender.value = "男";
-      }
-      else if (res.data.gender == "female") {
-        gender.value = "女";
-      }
-      if(!res.data.age){
-        age.value = "未设置";
-      }
-      else age.value = res.data.age;
+  api.getUserInfo({ username: store.getters.getUsername }).then((res) => {
+    if (res.data.gender == "male") {
+      gender.value = "男";
+    } else if (res.data.gender == "female") {
+      gender.value = "女";
+    }
+    if (res.data.age == -1) {
+      age.value = "未设置";
+    } else age.value = res.data.age;
 
-      if(res.data.phone_number == 'None'){
-        tele.value = "未设置";
-      }
-      else tele.value = res.data.phone_number;
-      
-      if(res.data.nickname == -1){
-        nickname.value = "未设置";
-      }
-      else nickname.value = res.data.nickname;
+    if (res.data.phone_number == "-1") {
+      tele.value = "未设置";
+    } else tele.value = res.data.phone_number;
 
+    if (res.data.nickname == "-1") {
+      nickname.value = "未设置";
+    } else nickname.value = res.data.nickname;
 
+    if (res.data.avatar != "-1") {
       let avatar_str = res.data.avatar.replace(/\s/g, "+");
       image_base64.value = avatar_str;
-    });
-  })
-
-
+    }
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -307,9 +341,7 @@ onMounted(() => {
 
 .box-card {
   margin-top: 50px;
-
 }
-
 
 .avatar-username {
   display: flex;
@@ -351,8 +383,7 @@ onMounted(() => {
 
 .username {
   font-family: system-ui;
-  font-size:2em;
+  font-size: 2em;
   font-weight: bold;
 }
 </style>
-

@@ -1,15 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 //通常web应用的首页在这里直接引入
-import HelloView from '../views/HelloView.vue'
 import HomeView from '../views/HomeView.vue'
 import Layout from '../layout'
 
 const routes = [
-  {
-    path: '/hello',
-    name: 'hello',
-    component: HelloView
-  },
   {
     path: '/',
     name: 'home',
